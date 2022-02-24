@@ -49,4 +49,10 @@ environments {
             [pattern: '/testOnly/**', access: ['permitAll']]
         ]
     }
+    development {
+        grails.plugin.springsecurity.controllerAnnotations.staticRules += [
+            [pattern: '/graphql/browser/**', access: ['permitAll']],
+            [pattern: '/graphql/index/**',   access: ['permitAll']]
+        ]
+    }
 }
