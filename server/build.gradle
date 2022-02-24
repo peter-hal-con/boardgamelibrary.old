@@ -77,6 +77,11 @@ dependencies {
     implementation 'org.grails.plugins:spring-security-core:4.0.4'
     // https://mvnrepository.com/artifact/org.grails.plugins/spring-security-rest
     implementation 'org.grails.plugins:spring-security-rest:3.0.1'
+
+    // https://mvnrepository.com/artifact/org.grails/gorm-graphql
+    implementation 'org.grails:gorm-graphql:2.0.0'
+    // https://plugins.grails.org/plugin/grails/gorm-graphql-plugin
+    implementation 'org.grails.plugins:gorm-graphql-plugin:2.0.0'
 }
 
 bootRun {
