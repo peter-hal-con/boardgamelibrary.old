@@ -1,4 +1,4 @@
-package com.halcon.gaming
+package com.halcon.gaming.boardgamelibrary
 
 import grails.core.GrailsApplication
 import grails.plugins.*

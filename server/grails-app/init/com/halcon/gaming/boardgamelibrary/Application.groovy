@@ -1,4 +1,4 @@
-package com.halcon.gaming
+package com.halcon.gaming.boardgamelibrary
 
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration
