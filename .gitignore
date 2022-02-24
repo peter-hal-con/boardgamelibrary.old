@@ -1,0 +1,6 @@
+.gradle/
+build/
+client/.gradle/
+client/dist/
+client/node_modules/
+prodDb.mv.db
