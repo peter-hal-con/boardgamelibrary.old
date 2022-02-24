@@ -26,4 +26,9 @@ public class ServerSetupTeardown {
     public static void stopServer() {
         serverProcessManager.stop()
     }
+
+    @Before
+    public void resetServer() {
+        assertEquals(200, new URL("http://localhost:8080/testOnly/reset").openConnection().responseCode)
+    }
 }

@@ -72,6 +72,11 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.3'
+
+    // https://mvnrepository.com/artifact/org.grails.plugins/spring-security-core
+    implementation 'org.grails.plugins:spring-security-core:4.0.4'
+    // https://mvnrepository.com/artifact/org.grails.plugins/spring-security-rest
+    implementation 'org.grails.plugins:spring-security-rest:3.0.1'
 }
 
 bootRun {

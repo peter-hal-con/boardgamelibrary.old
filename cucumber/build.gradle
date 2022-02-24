@@ -30,6 +30,12 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: '4.1.2'
+
+    // https://mvnrepository.com/artifact/io.cucumber/cucumber-picocontainer
+    testImplementation 'io.cucumber:cucumber-picocontainer:7.2.3'
+
+    // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
+    implementation 'com.jayway.jsonpath:json-path:2.7.0'
 }
 
 group = 'com.halcon.gaming.boardgamelibrary'
