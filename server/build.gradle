@@ -19,6 +19,7 @@ apply plugin:"idea"
 apply plugin:"org.grails.grails-web"
 apply plugin:"com.github.node-gradle.node"
 apply plugin:"org.grails.plugins.views-json"
+apply plugin:"jacoco"
 
 repositories {
     maven { url "https://repo.grails.org/grails/core" }
@@ -93,4 +94,12 @@ tasks.withType(GroovyCompile) {
 
 tasks.withType(Test) {
     useJUnitPlatform()
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
 }
