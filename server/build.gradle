@@ -12,7 +12,7 @@ buildscript {
 }
 
 version "0.1"
-group "com.halcon.gaming"
+group "com.halcon.gaming.boardgamelibrary"
 
 apply plugin:"eclipse"
 apply plugin:"idea"
