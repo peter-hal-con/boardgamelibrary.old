@@ -74,15 +74,15 @@ class WebStepDefinitions {
         webDriver.findElement(By.id(id)).sendKeys(value)
     }
 
-    @Then("we will see an element with an id of {string}")
-    public void we_will_see_an_element_with_an_id_of(String id) {
+    @Then("we will see an element with id {string}")
+    public void we_will_see_an_element_with_id(String id) {
         await().atMost(Duration.ofSeconds(5)).until {
             webDriver.findElements(By.id(id)).size() == 1
         }
     }
 
-    @Then("we will not see an element with an id of {string}")
-    public void we_will_not_see_an_element_with_an_id_of(String id) {
+    @Then("we will not see an element with id {string}")
+    public void we_will_not_see_an_element_with_id(String id) {
         await().atMost(Duration.ofMinutes(1)).until {
             webDriver.findElements(By.id(id)).empty
         }
