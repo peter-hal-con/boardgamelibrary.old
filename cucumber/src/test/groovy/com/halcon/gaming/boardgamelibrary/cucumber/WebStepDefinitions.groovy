@@ -1,6 +1,7 @@
 package com.halcon.gaming.boardgamelibrary.cucumber
 
 import static org.awaitility.Awaitility.*
+import static org.junit.jupiter.api.Assertions.*
 
 import java.nio.file.Paths
 import java.time.Duration
@@ -9,9 +10,15 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.html5.LocalStorage
+import org.openqa.selenium.html5.WebStorage
+import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.WebDriverWait
 
+import groovy.json.JsonSlurper
 import io.cucumber.java.After
 import io.cucumber.java.Before
+import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 
@@ -19,6 +26,11 @@ class WebStepDefinitions {
     WebDriver webDriver
 
     private final ChromeDriverManager chromeDriverManager = new ChromeDriverManager(Paths.get("build", "chromedriver"))
+    private final UserRepository userRepository
+
+    WebStepDefinitions(UserRepository userRepository) {
+        this.userRepository = userRepository
+    }
 
     @Before
     public void startWebDriver() {
@@ -37,9 +49,29 @@ class WebStepDefinitions {
         webDriver.close()
     }
 
+    @Given("we have directed the browser to {string}")
     @When("we direct the browser to {string}")
     public void we_direct_the_browser_to(String url) {
         webDriver.get(url)
+    }
+
+    @Given("we are logged in as {string}")
+    public void we_are_logged_in_as(String username) {
+        we_direct_the_browser_to("http://localhost:3000/#/")
+        we_click_the_element_with_id("open_login")
+        we_enter_the_value_into_the_element_with_id(username, "username")
+        we_enter_the_value_into_the_element_with_id(userRepository.userPassword(username), "password")
+        we_click_the_element_with_id("submit_login")
+    }
+
+    @When("we click the element with id {string}")
+    public void we_click_the_element_with_id(String id) {
+        new WebDriverWait(webDriver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(By.id(id))).click();
+    }
+
+    @When("we enter the value {string} into the element with id {string}")
+    public void we_enter_the_value_into_the_element_with_id(String value, String id) {
+        webDriver.findElement(By.id(id)).sendKeys(value)
     }
 
     @Then("we will see an element with an id of {string}")
@@ -47,5 +79,15 @@ class WebStepDefinitions {
         await().atMost(Duration.ofSeconds(5)).until {
             webDriver.findElements(By.id(id)).size() == 1
         }
+    }
+
+    @Then("we will be logged in as {string}")
+    public void we_will_be_logged_in_as(String username) {
+        LocalStorage localStorage
+        await().atMost(Duration.ofSeconds(5)).until {
+            localStorage = ((WebStorage)webDriver).getLocalStorage()
+            localStorage.getItem("auth") != null
+        }
+        assertEquals(username, new JsonSlurper().parseText(localStorage.getItem("auth")).username)
     }
 }

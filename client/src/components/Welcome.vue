@@ -123,6 +123,9 @@
 </template>
 
 <script>
+import '../assets/css/grails.css'
+import '../assets/css/main.css'
+
 export default {
   name: 'Welcome',
   data () {
