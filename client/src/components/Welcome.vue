@@ -125,6 +125,7 @@
 <script>
 import '../assets/css/grails.css'
 import '../assets/css/main.css'
+import {checkResponseStatus} from '../handlers'
 
 export default {
   name: 'Welcome',
@@ -137,9 +138,22 @@ export default {
     }
   },
   created () {
-    fetch(`${this.serverURL}/application`)
-      .then(response => response.json())
+    var headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+    if(localStorage.getItem("auth") !== null) {
+      var auth = JSON.parse(localStorage.auth);
+      headers['Authorization'] = `${auth.token_type} ${auth.access_token}`
+    }
+    fetch(`${this.serverURL}/application`, {
+      method: "GET",
+      headers: headers
+    }).then(checkResponseStatus)
       .then(json => (this.serverInfo = json))
+      .catch(error => {
+        console.error(error); // eslint-disable-line no-console
+      });
   }
 }
 </script>

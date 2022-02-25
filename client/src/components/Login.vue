@@ -1,6 +1,9 @@
 <template>
   <form @submit.prevent="login">
     <h3>Sign In</h3>
+    <div id="login_failed" v-if="loginFailed" class="alert alert-danger" role="alert">
+      Invalid login.
+    </div>
     <div class="form-group">
       <label>Email address</label>
       <input id="username" v-model="userDetails.username" type="email" class="form-control form-control-lg" />
@@ -13,6 +16,7 @@
   </form>
 </template>
 <script>
+import {bus} from '../main'
 import {checkResponseStatus} from '../handlers'
 
 export default {
@@ -22,7 +26,8 @@ export default {
       userDetails: {
         username: "",
         password: ""
-      }
+      },
+      loginFailed: false
     };
   },
   methods: {
@@ -36,8 +41,15 @@ export default {
         body: JSON.stringify(this.userDetails)
       }).then(checkResponseStatus).then(response => {
         localStorage.auth = JSON.stringify(response);
+        bus.$emit('loginStateChange', true);
+        this.$router.push('/');
+        this.$forceUpdate();
       }).catch(error => {
-        console.error(error); // eslint-disable-line no-console
+        if(error.response.status == 401) {
+          this.loginFailed = true
+        } else {
+          console.error(error); // eslint-disable-line no-console
+        }
       });
     }
   }

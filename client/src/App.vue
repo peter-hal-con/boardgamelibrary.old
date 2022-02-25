@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <LoginButton/>
+      <UserDropdownLoginButtonToggle/>
     </nav>
     <router-view/>
   </div>

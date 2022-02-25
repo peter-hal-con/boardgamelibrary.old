@@ -81,6 +81,13 @@ class WebStepDefinitions {
         }
     }
 
+    @Then("we will not see an element with an id of {string}")
+    public void we_will_not_see_an_element_with_an_id_of(String id) {
+        await().atMost(Duration.ofMinutes(1)).until {
+            webDriver.findElements(By.id(id)).empty
+        }
+    }
+
     @Then("we will be logged in as {string}")
     public void we_will_be_logged_in_as(String username) {
         LocalStorage localStorage
@@ -89,5 +96,20 @@ class WebStepDefinitions {
             localStorage.getItem("auth") != null
         }
         assertEquals(username, new JsonSlurper().parseText(localStorage.getItem("auth")).username)
+    }
+
+    @Then("we will not be logged in")
+    public void we_will_not_be_logged_in() {
+        await().atMost(Duration.ofSeconds(5)).until {
+            LocalStorage localStorage = ((WebStorage)webDriver).getLocalStorage()
+            localStorage.getItem("auth") == null
+        }
+    }
+
+    @Then("the current URL will be {string}")
+    public void the_current_url_will_be(String url) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            webDriver.currentUrl == url
+        }
     }
 }

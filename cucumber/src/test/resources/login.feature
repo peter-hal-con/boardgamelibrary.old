@@ -23,3 +23,41 @@ Feature: Login
     And we enter the value "password3" into the element with id "password"
     And we click the element with id "submit_login"
     Then we will be logged in as "test@example.com"
+    And the current URL will be "http://localhost:3000/#/"
+    And we will see an element with an id of "user_dropdown"
+    And we will not see an element with an id of "open_login"
+
+
+  Scenario: Failed login should display alert
+    Given the following users exist:
+      | username         | password  |
+      | test@example.com | password3 |
+    And we have directed the browser to "http://localhost:3000/#/login/"
+    When we enter the value "test@example.com" into the element with id "username"
+    And we enter the value "wrong_password" into the element with id "password"
+    And we click the element with id "submit_login"
+    Then we will not be logged in
+    And we will see an element with an id of "login_failed"
+
+
+  Scenario: There is a logout option in the user dropdown
+    Given the following users exist:
+      | username         | password  |
+      | test@example.com | password3 |
+    And we are logged in as "test@example.com"
+    When we click the element with id "user_dropdown"
+    Then we will see an element with an id of "logout"
+
+
+  Scenario: We can logout
+    Given the following users exist:
+      | username         | password  |
+      | test@example.com | password3 |
+    And we are logged in as "test@example.com"
+    And we have directed the browser to "http://localhost:3000/#/someplace/"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "logout"
+    Then we will not be logged in
+    And the current URL will be "http://localhost:3000/#/"
+    And we will not see an element with an id of "user_dropdown"
+    And we will see an element with an id of "open_login"
