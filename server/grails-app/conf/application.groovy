@@ -57,7 +57,8 @@ environments {
     development {
         grails.plugin.springsecurity.controllerAnnotations.staticRules += [
             [pattern: '/graphql/browser/**', access: ['permitAll']],
-            [pattern: '/graphql/index/**',   access: ['permitAll']]
+            [pattern: '/graphql/index/**',   access: ['permitAll']],
+            [pattern: '/h2-console/**',      access: ['permitAll']]
         ]
     }
 }
