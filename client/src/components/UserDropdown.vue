@@ -22,7 +22,7 @@ export default {
     logout: function() {
       localStorage.removeItem("auth")
       bus.$emit('loginStateChange', false);
-      this.$router.push('/');
+      if(this.$route.path !== '/') this.$router.push('/');
       this.$forceUpdate();
     }
   }
