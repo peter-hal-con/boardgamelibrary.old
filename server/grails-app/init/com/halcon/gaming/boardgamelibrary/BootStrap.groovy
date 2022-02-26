@@ -16,7 +16,7 @@ class BootStrap {
         UserAuthority.create(admin, Authority.findByAuthority("ROLE_ADMIN"))
 
         User committee = new User(username:"committee@example.com", password:"password2").save()
-        UserAuthority.create(committee, Authority.findByAuthority("ROLE_ADMIN"))
+        UserAuthority.create(committee, Authority.findByAuthority("ROLE_COMMITTEE"))
 
         User test = new User(username:"test@example.com", password:"password3").save()
     }
