@@ -138,22 +138,21 @@ export default {
     }
   },
   created () {
-    var headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
     if(localStorage.getItem("auth") !== null) {
       var auth = JSON.parse(localStorage.auth);
-      headers['Authorization'] = `${auth.token_type} ${auth.access_token}`
-    }
-    fetch(`${this.serverURL}/application`, {
-      method: "GET",
-      headers: headers
-    }).then(checkResponseStatus)
+      fetch(`${this.serverURL}/application`, {
+        method: "GET",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `${auth.token_type} ${auth.access_token}`
+        }
+      }).then(checkResponseStatus)
       .then(json => (this.serverInfo = json))
       .catch(error => {
         console.error(error); // eslint-disable-line no-console
       });
+    }
   }
 }
 </script>
