@@ -140,18 +140,20 @@ export default {
   created () {
     if(localStorage.getItem("auth") !== null) {
       var auth = JSON.parse(localStorage.auth);
-      fetch(`${this.serverURL}/application`, {
-        method: "GET",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `${auth.token_type} ${auth.access_token}`
-        }
-      }).then(checkResponseStatus)
-      .then(json => (this.serverInfo = json))
-      .catch(error => {
-        console.error(error); // eslint-disable-line no-console
-      });
+      if(auth.roles.includes("ROLE_ADMIN")) {
+        fetch(`${this.serverURL}/application`, {
+          method: "GET",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `${auth.token_type} ${auth.access_token}`
+          }
+        }).then(checkResponseStatus)
+        .then(json => (this.serverInfo = json))
+        .catch(error => {
+          console.error(error); // eslint-disable-line no-console
+        });
+      }
     }
   }
 }
