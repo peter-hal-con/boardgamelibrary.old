@@ -11,6 +11,7 @@ import grails.compiler.GrailsCompileStatic
 class UserAuthority implements Serializable {
 
     private static final long serialVersionUID = 1
+    static graphql = true
 
     User user
     Authority authority

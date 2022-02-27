@@ -7,6 +7,8 @@ import com.jayway.jsonpath.PathNotFoundException
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import io.cucumber.java.en.Then
+import io.cucumber.java.en.When
 
 class RestClient {
     private String accessToken
@@ -67,5 +69,33 @@ class RestClient {
 
     public hasAccessToken() {
         return accessToken != null
+    }
+
+    public String performGraphQL(String query) {
+        def request = performGetRequest("/graphql?query=${URLEncoder.encode(query, 'UTF-8')}", accessToken)
+        assertEquals(200, request.responseCode)
+        return request.getInputStream().getText()
+    }
+
+    public void graphQL(String query) {
+        GET("/graphql?query=${URLEncoder.encode(query, 'UTF-8')}")
+    }
+
+    // TODO: Does not belong here
+    @When("we perform a GraphQL query {string}")
+    public void we_perform_a_graph_ql_query(String query) {
+        graphQL(query)
+    }
+
+    // TODO: Does not belong here
+    @Then("the result of {string} will be {string}")
+    public void the_result_of_will_be(String jsonPath, String expectedValue) {
+        assertEquals(expectedValue, jsonPathParse(requestResponseText, jsonPath).toString())
+    }
+
+    // TODO: Does not belong here
+    @Then("the result of {string} will have a value")
+    public void the_result_of_will_have_a_value(String jsonPath) {
+        assertNotNull(jsonPathParse(requestResponseText, jsonPath))
     }
 }
