@@ -2,12 +2,12 @@
 Feature: Login
 
   Scenario: There is a login button
-    When we direct the browser to "http://localhost:8080/#/"
+    When we direct the browser to "/#/"
     Then we will see an element with id "open_login"
 
 
   Scenario: Clicking the login button opens the login dialog
-    Given we have directed the browser to "http://localhost:8080/#/"
+    Given we have directed the browser to "/#/"
     When we click the element with id "open_login"
     Then we will see an element with id "username"
     And we will see an element with id "password"
@@ -18,12 +18,12 @@ Feature: Login
     Given the following users exist:
       | username         | password  |
       | test@example.com | password3 |
-    And we have directed the browser to "http://localhost:8080/#/login/"
+    And we have directed the browser to "/#/login/"
     When we enter the value "test@example.com" into the element with id "username"
     And we enter the value "password3" into the element with id "password"
     And we click the element with id "submit_login"
     Then we will be logged in as "test@example.com"
-    And the current URL will be "http://localhost:8080/#/"
+    And the current URL will be "/#/"
     And we will see an element with id "user_dropdown"
     And we will not see an element with id "open_login"
 
@@ -32,7 +32,7 @@ Feature: Login
     Given the following users exist:
       | username         | password  |
       | test@example.com | password3 |
-    And we have directed the browser to "http://localhost:8080/#/login/"
+    And we have directed the browser to "/#/login/"
     When we enter the value "test@example.com" into the element with id "username"
     And we enter the value "wrong_password" into the element with id "password"
     And we click the element with id "submit_login"
@@ -54,11 +54,11 @@ Feature: Login
       | username         | password  |
       | test@example.com | password3 |
     And we are logged in as "test@example.com"
-    And we have directed the browser to "http://localhost:8080/#/someplace/"
+    And we have directed the browser to "/#/someplace/"
     When we click the element with id "user_dropdown"
     And we click the element with id "logout"
     Then we will not be logged in
-    And the current URL will be "http://localhost:8080/#/"
+    And the current URL will be "/#/"
     And we will not see an element with id "user_dropdown"
     And we will see an element with id "open_login"
 
@@ -70,5 +70,5 @@ Feature: Login
     And we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"
     And we click the element with id "logout"
-    And we direct the browser to "http://localhost:8080/application"
+    And we direct the browser to "/application"
     Then we will see an element with id "login"

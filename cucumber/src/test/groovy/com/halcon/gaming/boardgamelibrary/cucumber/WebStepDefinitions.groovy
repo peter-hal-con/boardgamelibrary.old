@@ -51,13 +51,13 @@ class WebStepDefinitions {
 
     @Given("we have directed the browser to {string}")
     @When("we direct the browser to {string}")
-    public void we_direct_the_browser_to(String url) {
-        webDriver.get(url)
+    public void we_direct_the_browser_to(String path) {
+        webDriver.get("http://localhost:8080${path}")
     }
 
     @Given("we are logged in as {string}")
     public void we_are_logged_in_as(String username) {
-        we_direct_the_browser_to("http://localhost:8080/#/")
+        we_direct_the_browser_to("/#/")
         we_click_the_element_with_id("open_login")
         we_enter_the_value_into_the_element_with_id(username, "username")
         we_enter_the_value_into_the_element_with_id(userRepository.userPassword(username), "password")
@@ -109,7 +109,7 @@ class WebStepDefinitions {
     @Then("the current URL will be {string}")
     public void the_current_url_will_be(String url) {
         await().atMost(Duration.ofSeconds(5)).until {
-            webDriver.currentUrl == url
+            webDriver.currentUrl == "http://localhost:8080${url}"
         }
     }
 }

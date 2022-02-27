@@ -7,10 +7,13 @@ import io.cucumber.java.Before
 import io.cucumber.java.BeforeAll
 
 public class ApplicationSetupTeardown {
+    private static int responseCode(String path) {
+        return new URL("http://localhost:8080${path}").openConnection().responseCode
+    }
+
     private static ProcessManager processManager = new ProcessManager("java -Dgrails.env=test -jar build/server-0.1.jar", new File(".."), {
         try {
-            String url = "http://localhost:8080/"
-            int rc = new URL(url).openConnection().getResponseCode()
+            int rc = responseCode("/")
             return rc == 200
         } catch(IOException e) {
             return false
@@ -29,6 +32,6 @@ public class ApplicationSetupTeardown {
 
     @Before
     public void resetServer() {
-        assertEquals(200, new URL("http://localhost:8080/testOnly/reset").openConnection().responseCode)
+        assertEquals(200, responseCode("/testOnly/reset"))
     }
 }
