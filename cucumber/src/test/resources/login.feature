@@ -61,3 +61,14 @@ Feature: Login
     And the current URL will be "http://localhost:8080/#/"
     And we will not see an element with id "user_dropdown"
     And we will see an element with id "open_login"
+
+
+  Scenario: Logging out means not having access to restricted endpoints
+    Given the following users exist:
+      | username          | password  | authorities |
+      | admin@example.com | password3 | ROLE_ADMIN  |
+    And we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "logout"
+    And we direct the browser to "http://localhost:8080/application"
+    Then we will see an element with id "login"

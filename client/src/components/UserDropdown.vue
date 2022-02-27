@@ -24,6 +24,12 @@ export default {
       bus.$emit('loginStateChange', false);
       if(this.$route.path !== '/') this.$router.push('/');
       this.$forceUpdate();
+      fetch(`${process.env.VUE_APP_SERVER_URL}/logoff`, {
+        method: 'POST',
+        redirect: 'manual'
+      }).catch(error => {
+        console.error(error); // eslint-disable-line no-console
+      });
     }
   }
 }
