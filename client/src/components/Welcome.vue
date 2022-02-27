@@ -123,6 +123,11 @@
 </template>
 
 <script>
+import '../assets/css/grails.css'
+import '../assets/css/main.css'
+import {checkResponseStatus} from '../handlers'
+import { bus } from '../main'
+
 export default {
   name: 'Welcome',
   data () {
@@ -133,10 +138,33 @@ export default {
       serverURL: process.env.VUE_APP_SERVER_URL
     }
   },
+  methods: {
+    updateServerInfo: function() {
+      this.serverInfo = null
+      if(localStorage.getItem("auth") !== null) {
+        var auth = JSON.parse(localStorage.auth);
+        if(auth.roles.includes("ROLE_ADMIN")) {
+          fetch(`${this.serverURL}/application`, {
+            method: "GET",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': `${auth.token_type} ${auth.access_token}`
+            }
+          }).then(checkResponseStatus)
+          .then(json => (this.serverInfo = json))
+          .catch(error => {
+            console.error(error); // eslint-disable-line no-console
+          });
+        }
+      }
+    }
+  },
   created () {
-    fetch(`${this.serverURL}/application`)
-      .then(response => response.json())
-      .then(json => (this.serverInfo = json))
+    this.updateServerInfo();
+    bus.$on('loginStateChange', () => {
+      this.updateServerInfo();
+    })
   }
 }
 </script>

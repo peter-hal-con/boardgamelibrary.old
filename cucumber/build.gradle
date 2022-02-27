@@ -36,6 +36,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
     implementation 'com.jayway.jsonpath:json-path:2.7.0'
+
+    // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-support
+    implementation 'org.seleniumhq.selenium:selenium-support:4.1.2'
 }
 
 group = 'com.halcon.gaming.boardgamelibrary'

@@ -18,3 +18,5 @@ task assembleServerAndClient(type: Copy, dependsOn: ['copyClientResources', ':se
 task(project:"server", name:"assemble").mustRunAfter(copyClientResources) 
 
 task stage(dependsOn: ['assembleServerAndClient'])
+
+task cucumber(dependsOn: ['stage'])
