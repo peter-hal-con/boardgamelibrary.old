@@ -57,7 +57,7 @@ class WebStepDefinitions {
 
     @Given("we are logged in as {string}")
     public void we_are_logged_in_as(String username) {
-        we_direct_the_browser_to("http://localhost:3000/#/")
+        we_direct_the_browser_to("http://localhost:8080/#/")
         we_click_the_element_with_id("open_login")
         we_enter_the_value_into_the_element_with_id(username, "username")
         we_enter_the_value_into_the_element_with_id(userRepository.userPassword(username), "password")

@@ -6,12 +6,12 @@ import io.cucumber.java.AfterAll
 import io.cucumber.java.Before
 import io.cucumber.java.BeforeAll
 
-public class ServerSetupTeardown {
-    private static ProcessManager serverProcessManager = new ProcessManager("./gradlew -Dgrails.env=test server:bootRun", new File(".."), {
+public class ApplicationSetupTeardown {
+    private static ProcessManager processManager = new ProcessManager("java -Dgrails.env=test -jar build/server-0.1.jar", new File(".."), {
         try {
             String url = "http://localhost:8080/"
             int rc = new URL(url).openConnection().getResponseCode()
-            return rc == 200 || rc == 404
+            return rc == 200
         } catch(IOException e) {
             return false
         }
@@ -19,12 +19,12 @@ public class ServerSetupTeardown {
 
     @BeforeAll
     public static void startServer() {
-        serverProcessManager.start()
+        processManager.start()
     }
 
     @AfterAll
     public static void stopServer() {
-        serverProcessManager.stop()
+        processManager.stop()
     }
 
     @Before

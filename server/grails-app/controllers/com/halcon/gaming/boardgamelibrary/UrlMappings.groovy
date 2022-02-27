@@ -12,11 +12,7 @@ class UrlMappings {
         put "/$controller/$id(.$format)?"(action:"update")
         patch "/$controller/$id(.$format)?"(action:"patch")
 
-        if ( Environment.current == Environment.PRODUCTION ) {
-            '/'(uri: '/index.html')
-        } else {
-            '/'(controller: 'application', action:'index')
-        }
+        '/'(uri: '/index.html')
         "500"(view: '/error')
         "404"(view: '/notFound')
 
