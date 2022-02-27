@@ -1,16 +1,10 @@
 package com.halcon.gaming.boardgamelibrary.cucumber
 
+import static org.junit.jupiter.api.Assertions.*
+
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
-
-import static org.junit.jupiter.api.Assertions.*
-
-import com.jayway.jsonpath.JsonPath
-import com.jayway.jsonpath.PathNotFoundException
-
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
 
 public class StepDefinitions {
     private final UserRepository userRepository
@@ -59,5 +53,20 @@ public class StepDefinitions {
     @Then("we will not have an access token")
     public void we_will_not_have_an_access_token() {
         assertFalse(restClient.hasAccessToken())
+    }
+
+    @When("we perform a GraphQL query {string}")
+    public void we_perform_a_graph_ql_query(String query) {
+        restClient.graphQL(query)
+    }
+
+    @Then("the result of {string} will be {string}")
+    public void the_result_of_will_be(String jsonPath, String expectedValue) {
+        assertEquals(expectedValue, restClient.extractJsonPathFromResponse(jsonPath).toString())
+    }
+
+    @Then("the result of {string} will have a value")
+    public void the_result_of_will_have_a_value(String jsonPath) {
+        assertNotNull(restClient.extractJsonPathFromResponse(jsonPath).toString())
     }
 }
