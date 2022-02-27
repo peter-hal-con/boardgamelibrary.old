@@ -1,6 +1,5 @@
 package com.halcon.gaming.boardgamelibrary
 
-
 import grails.rest.*
 import grails.converters.*
 import grails.gorm.transactions.Transactional
