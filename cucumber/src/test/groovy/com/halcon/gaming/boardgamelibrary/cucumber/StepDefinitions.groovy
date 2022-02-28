@@ -1,106 +1,72 @@
 package com.halcon.gaming.boardgamelibrary.cucumber
 
+import static org.junit.jupiter.api.Assertions.*
+
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 
-import static org.junit.jupiter.api.Assertions.*
-
-import com.jayway.jsonpath.JsonPath
-import com.jayway.jsonpath.PathNotFoundException
-
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
-
 public class StepDefinitions {
     private final UserRepository userRepository
+    private final RestClient restClient
 
-    String accessToken
-    Integer requestResponseCode
-    String requestResponseText
-
-    StepDefinitions(UserRepository userRepository) {
+    StepDefinitions(UserRepository userRepository, RestClient restClient) {
         this.userRepository = userRepository
-    }
-
-    private static openConnection(String path) {
-        return new URL("http://localhost:8080${path}").openConnection()
-    }
-
-    private static URLConnection performGetRequest(String path, String accessToken = null) {
-        URLConnection request = openConnection(path)
-        request.setInstanceFollowRedirects(false)
-        if(accessToken != null) {
-            request.setRequestProperty("Authorization", "Bearer " + accessToken)
-        }
-        return request
-    }
-
-    private static URLConnection performPostRequest(String path, def body) {
-        URLConnection request = openConnection(path)
-        request.setRequestMethod("POST")
-        request.setDoOutput(true)
-        request.setRequestProperty("Content-Type", "application/json")
-        request.getOutputStream().write(JsonOutput.toJson(body).getBytes("UTF-8"))
-        return request
-    }
-
-    private static String authenticate(String username, String password) {
-        def request = performPostRequest("/api/login", [username:username, password:password])
-        return request.responseCode == 200 ? new JsonSlurper().parseText(request.getInputStream().getText()).access_token : null
-    }
-
-    private static def jsonPathParse(String document, String jsonPath) {
-        try {
-            return JsonPath.parse(document).read(jsonPath)
-        } catch(PathNotFoundException e) {
-            println("--- PathNotFoundException ---")
-            println("document: ${document}")
-            println("jsonPath: ${jsonPath}")
-            println("-----------------------------")
-            fail()
-        }
+        this.restClient = restClient
     }
 
     @Given("the following users exist:")
     public void the_following_users_exist(io.cucumber.datatable.DataTable dataTable) {
         dataTable.asMaps().each {
             def authorities = it.authorities != null ? it.authorities.split(',') : []
-            def request = performPostRequest("/testOnly/createUser", [username:it.username, password:it.password, authorities:authorities])
+            def request = RestClient.performPostRequest("/testOnly/createUser", [username:it.username, password:it.password, authorities:authorities])
             assertEquals(200, request.getResponseCode())
-            userRepository.registerUser(jsonPathParse(request.getInputStream().getText(), '$.id').toString(), it.username, it.password)
+            userRepository.registerUser(RestClient.jsonPathParse(request.getInputStream().getText(), '$.id').toString(), it.username, it.password)
         }
     }
 
     @Given("we are authenticated as {string}")
     public void we_are_authenticated_as(String username) {
-        accessToken = authenticate(username, userRepository.userPassword(username))
+        restClient.authenticate(username, userRepository.userPassword(username))
     }
 
     @When("we perform a GET request on {string}")
     public void we_perform_a_get_request_on(String path) {
-        URLConnection request = performGetRequest(path, accessToken)
-        requestResponseCode = request.getResponseCode()
-        requestResponseText = requestResponseCode != 404 ? request.getInputStream().getText() : null
+        restClient.GET(path)
     }
 
     @When("we authenticate as {string} with password {string}")
     public void we_authenticate_as_with_password(String username, String password) {
-        accessToken = authenticate(username, password)
+        restClient.authenticate(username, password)
     }
 
     @Then("we get a {int} response")
     public void we_get_a_response(Integer expectedResponseCode) {
-        assertEquals(expectedResponseCode, requestResponseCode)
+        assertEquals(expectedResponseCode, restClient.responseCode)
     }
 
     @Then("we will have an access token")
     public void we_will_have_an_access_token() {
-        assertNotNull(accessToken)
+        assertTrue(restClient.hasAccessToken())
     }
 
     @Then("we will not have an access token")
     public void we_will_not_have_an_access_token() {
-        assertNull(accessToken)
+        assertFalse(restClient.hasAccessToken())
+    }
+
+    @When("we perform a GraphQL query {string}")
+    public void we_perform_a_graph_ql_query(String query) {
+        restClient.graphQL(query)
+    }
+
+    @Then("the result of {string} will be {string}")
+    public void the_result_of_will_be(String jsonPath, String expectedValue) {
+        assertEquals(expectedValue, restClient.extractJsonPathFromResponse(jsonPath).toString())
+    }
+
+    @Then("the result of {string} will have a value")
+    public void the_result_of_will_have_a_value(String jsonPath) {
+        assertNotNull(restClient.extractJsonPathFromResponse(jsonPath).toString())
     }
 }
