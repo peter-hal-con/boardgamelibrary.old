@@ -34,7 +34,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
     [pattern: '/img/**',         access: ['permitAll']],
     [pattern: '/**/favicon.ico', access: ['permitAll']],
     [pattern: '/application/**', access: ['ROLE_ADMIN']],
-    [pattern: '/graphql/index/**', access: ['ROLE_ADMIN']]
+    [pattern: '/graphql/index/**', access: ['permitAll']]
 ]
 
 grails.plugin.springsecurity.filterChain.chainMap = [

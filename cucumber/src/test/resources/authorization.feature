@@ -10,10 +10,10 @@ Feature: Authorization
 
   Scenario Outline: Retrieving a list of users
     Given we are authenticated as "<username>"
-    And we perform a GraphQL query "query{userList{username}}"
-    Then we get a <response> response
+    When we perform a GraphQL query "query{userList{username}}"
+    Then the result of "$.data.userList.length()" will be "<count>"
 
     Examples:
-      | username              | password  | response |
-      | admin@example.com     | password1 | 200      |
-      | committee@example.com | password2 | 403      |
+      | username              | count |
+      | admin@example.com     | 2     |
+      | committee@example.com | null  |
