@@ -58,7 +58,7 @@ class RestClient {
     public void GET(String path) {
         URLConnection request = RestClient.performGetRequest(path, accessToken)
         requestResponseCode = request.getResponseCode()
-        requestResponseText = requestResponseCode != 404 ? request.getInputStream().getText() : null
+        requestResponseText = requestResponseCode == 200 ? request.getInputStream().getText() : null
     }
 
     public getResponseCode() {
