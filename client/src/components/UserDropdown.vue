@@ -4,6 +4,7 @@
       {{username}}
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a id="create_user" class="dropdown-item" href="/#/createUser">Create User</a>
       <a id="logout" v-on:click="logout()" class="dropdown-item" href="#">Logout</a>
     </div>
   </div>
