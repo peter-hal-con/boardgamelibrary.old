@@ -5,6 +5,18 @@ Feature: Create users
     Given the following users exist:
       | username              | password  | authorities    |
       | admin@example.com     | password1 | ROLE_ADMIN     |
+      | committee@example.com | password2 | ROLE_COMMITTEE |
+
+
+  Scenario: Only certain users can see the "Create User" button
+    Given we are logged in as "<username>"
+    When we click the element with id "user_dropdown"
+    Then we <will_or_will_not> see an element with id "create_user"
+
+    Examples:
+      | username              | will_or_will_not |
+      | admin@example.com     | will             |
+      | committee@example.com | will not         |
 
 
   Scenario: The create user dialog

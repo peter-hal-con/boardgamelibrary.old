@@ -4,7 +4,8 @@
       {{username}}
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <a id="create_user" class="dropdown-item" href="/#/createUser">Create User</a>
+      <a v-if="is_admin" id="create_user" class="dropdown-item" href="/#/createUser">Create User</a>
+      <div v-if="is_admin" class="dropdown-divider"></div>
       <a id="logout" v-on:click="logout()" class="dropdown-item" href="#">Logout</a>
     </div>
   </div>
@@ -16,7 +17,8 @@ export default {
   name: "UserDropdown",
   data() {
     return {
-      username: JSON.parse(localStorage.auth).username
+      username: JSON.parse(localStorage.auth).username,
+      is_admin: JSON.parse(localStorage.auth).roles.includes('ROLE_ADMIN')
     }
   },
   methods: {
