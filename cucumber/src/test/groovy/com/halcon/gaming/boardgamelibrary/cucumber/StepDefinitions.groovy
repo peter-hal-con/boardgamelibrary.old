@@ -65,6 +65,11 @@ public class StepDefinitions {
         assertEquals(expectedValue, restClient.extractJsonPathFromResponse(jsonPath).toString())
     }
 
+    @Then("the result of {string} will not be {string}")
+    public void the_result_of_will_not_be(String jsonPath, String unexpectedValue) {
+        assertNotEquals(unexpectedValue, restClient.extractJsonPathFromResponse(jsonPath).toString())
+    }
+
     @Then("the result of {string} will have a value")
     public void the_result_of_will_have_a_value(String jsonPath) {
         assertNotNull(restClient.extractJsonPathFromResponse(jsonPath).toString())

@@ -8,7 +8,7 @@ Feature: Create users
       | committee@example.com | password2 | ROLE_COMMITTEE |
 
 
-  Scenario: Only certain users can see the "Create User" button
+  Scenario Outline: Only certain users can see the "Create User" button
     Given we are logged in as "<username>"
     When we click the element with id "user_dropdown"
     Then we <will_or_will_not> see an element with id "create_user"
