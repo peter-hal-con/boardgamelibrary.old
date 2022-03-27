@@ -112,4 +112,9 @@ class WebStepDefinitions {
             webDriver.currentUrl == "http://localhost:8080${url}"
         }
     }
+
+    @Then("the element with id {string} will be disabled")
+    public void the_element_with_id_will_be_disabled(String id) {
+        assertFalse(webDriver.findElement(By.id(id)).enabled)
+    }
 }
