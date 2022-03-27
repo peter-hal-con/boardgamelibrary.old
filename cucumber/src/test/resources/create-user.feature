@@ -40,6 +40,19 @@ Feature: Create users
     Then the user with username "test@example.com" will have the password "password3"
 
 
+  Scenario: After successfully creating a user the form should be blanked
+    Given we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "create_user"
+    And we enter the value "test@example.com" into the element with id "username"
+    And we enter the value "password3" into the element with id "password"
+    And we enter the value "password3" into the element with id "confirm_password"
+    And we click the element with id "submit_create_user"
+    Then the element with id "username" will be empty
+    Then the element with id "password" will be empty
+    Then the element with id "confirm_password" will be empty
+
+
   Scenario: When the password and confirm_password field values are different an alert will appear and the submit button will be disabled
     Given we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"

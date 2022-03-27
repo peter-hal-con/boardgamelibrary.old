@@ -1,9 +1,9 @@
 <template>
   <form @submit.prevent="create_user">
     <h3>Create User</h3>
-    <div id="password_mismatch" v-if="!passwords_match" class="alert alert-danger" role="alert">Passwords do not match.</div>
+    <div id="username_not_email" v-if="!username_is_email" class="alert alert-danger" role="alert">Username is not an email address.</div>
+    <div id="password_mismatch" v-else-if="!passwords_match" class="alert alert-danger" role="alert">Passwords do not match.</div>
     <div id="password_too_short" v-else-if="!password_sufficient_length" class="alert alert-danger" role="alert">Password too short.</div>
-    <div id="username_not_email" v-else-if="!username_is_email" class="alert alert-danger" role="alert">Username is not an email address.</div>
     <div class="form-group">
       <label for="username">Email address</label>
       <input id="username" v-model="userDetails.username" type="email" class="form-control form-control-lg" />
@@ -36,6 +36,12 @@ export default {
   methods: {
     create_user: function() {
       fetchGraphQL('mutation{userCreate(user:{username:"'+this.userDetails.username+'" password:"'+this.userDetails.password+'" accountLocked:false accountExpired:false passwordExpired:false enabled:true}){id}}')
+      .then(response => {
+        console.log(response); // eslint-disable-line no-console
+        this.userDetails.username = "";
+        this.userDetails.password = "";
+        this.userDetails.confirm_password = "";
+      })
       .catch(error => {
         console.error(error); // eslint-disable-line no-console
       });

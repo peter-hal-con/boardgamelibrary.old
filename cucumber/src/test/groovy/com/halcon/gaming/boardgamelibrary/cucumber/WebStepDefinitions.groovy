@@ -117,4 +117,11 @@ class WebStepDefinitions {
     public void the_element_with_id_will_be_disabled(String id) {
         assertFalse(webDriver.findElement(By.id(id)).enabled)
     }
+
+    @Then("the element with id {string} will be empty")
+    public void the_element_with_id_will_be_empty(String id) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            "" == webDriver.findElement(By.id(id)).getAttribute("value")
+        }
+    }
 }
