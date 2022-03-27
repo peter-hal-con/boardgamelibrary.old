@@ -7,6 +7,7 @@ import java.nio.file.Paths
 import java.time.Duration
 
 import org.openqa.selenium.By
+import org.openqa.selenium.SessionNotCreatedException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
@@ -23,7 +24,7 @@ import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 
 class WebStepDefinitions {
-    WebDriver webDriver
+    WebDriver webDriver = null
 
     private final ChromeDriverManager chromeDriverManager = new ChromeDriverManager(Paths.get("build", "chromedriver"))
     private final UserRepository userRepository
@@ -39,7 +40,13 @@ class WebStepDefinitions {
         ChromeOptions options = new ChromeOptions()
         options.addArguments("--headless")
         options.addArguments("--no-sandbox")
-        webDriver = new ChromeDriver(options)
+        while(webDriver == null) {
+            try {
+                webDriver = new ChromeDriver(options)
+            } catch(SessionNotCreatedException e) {
+                Thread.sleep(5000)
+            }
+        }
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))
         webDriver.manage().window().maximize()
     }
