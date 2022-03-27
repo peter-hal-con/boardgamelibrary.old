@@ -124,4 +124,11 @@ class WebStepDefinitions {
             "" == webDriver.findElement(By.id(id)).getAttribute("value")
         }
     }
+
+    @Then("the element with id {string} will not be empty")
+    public void the_element_with_id_will_not_be_empty(String id) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            "" != webDriver.findElement(By.id(id)).getAttribute("value")
+        }
+    }
 }

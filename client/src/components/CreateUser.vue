@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="create_user">
     <h3>Create User</h3>
+    <div :id="'message_'+message.type" v-if="message.type" :class="'alert alert-'+message.type" role="alert">{{message.text}}</div>
     <div id="username_not_email" v-if="!username_is_email" class="alert alert-danger" role="alert">Username is not an email address.</div>
     <div id="password_mismatch" v-else-if="!passwords_match" class="alert alert-danger" role="alert">Passwords do not match.</div>
     <div id="password_too_short" v-else-if="!password_sufficient_length" class="alert alert-danger" role="alert">Password too short.</div>
@@ -26,6 +27,10 @@ export default {
   name: "CreateUser",
   data() {
     return {
+      message: {
+        type: "",
+        text: ""
+      },
       userDetails: {
         username: "",
         password: "",
@@ -37,10 +42,16 @@ export default {
     create_user: function() {
       fetchGraphQL('mutation{userCreate(user:{username:"'+this.userDetails.username+'" password:"'+this.userDetails.password+'" accountLocked:false accountExpired:false passwordExpired:false enabled:true}){id}}')
       .then(response => {
-        console.log(response); // eslint-disable-line no-console
-        this.userDetails.username = "";
-        this.userDetails.password = "";
-        this.userDetails.confirm_password = "";
+        if(response.data.userCreate.id) {
+          this.message.type = "success";
+          this.message.text = "Successfully created user: '" + this.userDetails.username + "'";
+          this.userDetails.username = "";
+          this.userDetails.password = "";
+          this.userDetails.confirm_password = "";
+        } else {
+          this.message.type = "danger";
+          this.message.text = "Could not create user: '" + this.userDetails.username + "'. Do they already exist?";
+        }
       })
       .catch(error => {
         console.error(error); // eslint-disable-line no-console

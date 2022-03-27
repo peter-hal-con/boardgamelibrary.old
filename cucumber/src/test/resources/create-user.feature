@@ -29,7 +29,7 @@ Feature: Create users
     And we will see an element with id "submit_create_user"
 
 
-  Scenario: Creating a user
+  Scenario: Successfully creating a user
     Given we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"
     And we click the element with id "create_user"
@@ -37,20 +37,29 @@ Feature: Create users
     And we enter the value "password3" into the element with id "password"
     And we enter the value "password3" into the element with id "confirm_password"
     And we click the element with id "submit_create_user"
-    Then the user with username "test@example.com" will have the password "password3"
+    Then we will see an element with id "message_success"
+    And the element with id "username" will be empty
+    And the element with id "password" will be empty
+    And the element with id "confirm_password" will be empty
+    And the user with username "test@example.com" will have the password "password3"
 
 
-  Scenario: After successfully creating a user the form should be blanked
-    Given we are logged in as "admin@example.com"
+  Scenario: Attempting to create a duplicate user
+    Given the following users exist:
+      | username              | password  | authorities    |
+      | test@example.com      | password3 | ROLE_ADMIN     |
+    And we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"
     And we click the element with id "create_user"
     And we enter the value "test@example.com" into the element with id "username"
-    And we enter the value "password3" into the element with id "password"
-    And we enter the value "password3" into the element with id "confirm_password"
+    And we enter the value "passwordThree" into the element with id "password"
+    And we enter the value "passwordThree" into the element with id "confirm_password"
     And we click the element with id "submit_create_user"
-    Then the element with id "username" will be empty
-    Then the element with id "password" will be empty
-    Then the element with id "confirm_password" will be empty
+    Then we will see an element with id "message_danger"
+    And the element with id "username" will not be empty
+    And the element with id "password" will not be empty
+    And the element with id "confirm_password" will not be empty
+    And the user with username "test@example.com" will have the password "password3"
 
 
   Scenario: When the password and confirm_password field values are different an alert will appear and the submit button will be disabled
