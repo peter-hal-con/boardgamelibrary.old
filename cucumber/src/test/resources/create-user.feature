@@ -26,6 +26,8 @@ Feature: Create users
     Then we will see an element with id "username"
     And we will see an element with id "password"
     And we will see an element with id "confirm_password"
+    And we will see an element with id "authority_ROLE_ADMIN"
+    And we will see an element with id "authority_ROLE_COMMITTEE"
     And we will see an element with id "submit_create_user"
 
 
@@ -42,6 +44,36 @@ Feature: Create users
     And the element with id "password" will be empty
     And the element with id "confirm_password" will be empty
     And the user with username "test@example.com" will have the password "password3"
+
+
+  Scenario: Creating a user with ROLE_ADMIN authority
+    Given we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "create_user"
+    And we enter the value "test@example.com" into the element with id "username"
+    And we enter the value "password3" into the element with id "password"
+    And we enter the value "password3" into the element with id "confirm_password"
+    And we click the element with id "authority_ROLE_ADMIN"
+    And we click the element with id "submit_create_user"
+    Then the user with username "test@example.com" will have the authority "ROLE_ADMIN"
+    And the user with username "test@example.com" will not have the authority "ROLE_COMMITTEE"
+    And the element with id "authority_ROLE_ADMIN" will be unchecked
+    And the element with id "authority_ROLE_COMMITTEE" will be unchecked
+
+
+  Scenario: Creating a user with ROLE_COMMITTEE authority
+    Given we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "create_user"
+    And we enter the value "test@example.com" into the element with id "username"
+    And we enter the value "password3" into the element with id "password"
+    And we enter the value "password3" into the element with id "confirm_password"
+    And we click the element with id "authority_ROLE_COMMITTEE"
+    And we click the element with id "submit_create_user"
+    Then the user with username "test@example.com" will have the authority "ROLE_COMMITTEE"
+    And the user with username "test@example.com" will not have the authority "ROLE_ADMIN"
+    And the element with id "authority_ROLE_ADMIN" will be unchecked
+    And the element with id "authority_ROLE_COMMITTEE" will be unchecked
 
 
   Scenario: Attempting to create a duplicate user
