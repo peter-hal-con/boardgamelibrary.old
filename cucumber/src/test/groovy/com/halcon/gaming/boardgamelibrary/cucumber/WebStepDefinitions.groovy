@@ -7,6 +7,7 @@ import java.nio.file.Paths
 import java.time.Duration
 
 import org.openqa.selenium.By
+import org.openqa.selenium.SessionNotCreatedException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
@@ -23,7 +24,7 @@ import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 
 class WebStepDefinitions {
-    WebDriver webDriver
+    WebDriver webDriver = null
 
     private final ChromeDriverManager chromeDriverManager = new ChromeDriverManager(Paths.get("build", "chromedriver"))
     private final UserRepository userRepository
@@ -39,7 +40,13 @@ class WebStepDefinitions {
         ChromeOptions options = new ChromeOptions()
         options.addArguments("--headless")
         options.addArguments("--no-sandbox")
-        webDriver = new ChromeDriver(options)
+        while(webDriver == null) {
+            try {
+                webDriver = new ChromeDriver(options)
+            } catch(SessionNotCreatedException e) {
+                Thread.sleep(5000)
+            }
+        }
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))
         webDriver.manage().window().maximize()
     }
@@ -110,6 +117,32 @@ class WebStepDefinitions {
     public void the_current_url_will_be(String url) {
         await().atMost(Duration.ofSeconds(5)).until {
             webDriver.currentUrl == "http://localhost:8080${url}"
+        }
+    }
+
+    @Then("the element with id {string} will be disabled")
+    public void the_element_with_id_will_be_disabled(String id) {
+        assertFalse(webDriver.findElement(By.id(id)).enabled)
+    }
+
+    @Then("the element with id {string} will be empty")
+    public void the_element_with_id_will_be_empty(String id) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            "" == webDriver.findElement(By.id(id)).getAttribute("value")
+        }
+    }
+
+    @Then("the element with id {string} will not be empty")
+    public void the_element_with_id_will_not_be_empty(String id) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            "" != webDriver.findElement(By.id(id)).getAttribute("value")
+        }
+    }
+
+    @Then("the element with id {string} will be unchecked")
+    public void the_element_with_id_will_be_unchecked(String id) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            !webDriver.findElement(By.id(id)).isSelected()
         }
     }
 }

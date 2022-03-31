@@ -77,4 +77,22 @@ class UserCrudStepDefinitions {
             RestClient.performAuthentication(username, password) != null
         }
     }
+
+    @Then("the user with username {string} will have the authority {string}")
+    public void the_user_with_username_will_have_the_authority(String username, String authority) {
+        await().atMost(5, TimeUnit.SECONDS).until {
+            restClient.authenticate("admin@example.com", userRepository.userPassword("admin@example.com"))
+            restClient.graphQL("query{userByUsername(username:\"${username}\"){authorities{authority}}}")
+            restClient.extractJsonPathFromResponse('$.data.userByUsername.authorities[*].authority').contains(authority)
+        }
+    }
+
+    @Then("the user with username {string} will not have the authority {string}")
+    public void the_user_with_username_will_not_have_the_authority(String username, String authority) {
+        await().atMost(5, TimeUnit.SECONDS).until {
+            restClient.authenticate("admin@example.com", userRepository.userPassword("admin@example.com"))
+            restClient.graphQL("query{userByUsername(username:\"${username}\"){authorities{authority}}}")
+            !restClient.extractJsonPathFromResponse('$.data.userByUsername.authorities[*].authority').contains(authority)
+        }
+    }
 }

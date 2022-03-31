@@ -17,3 +17,14 @@ Feature: Authorization
       | username              | count |
       | admin@example.com     | 2     |
       | committee@example.com | null  |
+
+
+  Scenario Outline: Creating a new user
+    Given we are authenticated as "<username>"
+    When we perform a GraphQL query "mutation{userCreate(user:{username:\"test@example.com\" password:\"password3\" accountLocked:false accountExpired:false passwordExpired:false enabled:true}){id}}"
+    Then the result of "$.data.userCreate" <will_or_will_not> be "null"
+
+    Examples:
+      | username              | will_or_will_not |
+      | admin@example.com     | will not         |
+      | committee@example.com | will             |
