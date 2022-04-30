@@ -3,15 +3,13 @@
     <thead>
       <tr>
         <th scope="col">Username</th>
-        <th scope="col">ROLE_ADMIN</th>
-        <th scope="col">ROLE_COMMITTEE</th>
+        <th scope="col" v-for="(authority) in authorities" :key="authority">{{authority}}</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="(user) in users" :key="user.id" :id="'tr-'+user.username">
         <td id="username">{{user.username}}</td>
-        <td id="ROLE_ADMIN">{{(require('jsonpath').query(user.authorities, '$..authority').includes('ROLE_ADMIN')) ? "&#10004;" : " "}}</td>
-        <td id="ROLE_COMMITTEE">{{(require('jsonpath').query(user.authorities, '$..authority').includes('ROLE_COMMITTEE')) ? "&#10004;" : " "}}</td>
+        <td v-for="(authority) in authorities" :key="authority" :id="authority">{{(require('jsonpath').query(user.authorities, '$..authority').includes(authority)) ? "&#10004;" : " "}}</td>
       </tr>
     </tbody>
   </table>
@@ -23,7 +21,8 @@ export default {
   name: "ListUsers",
   data() {
     return {
-      users: []
+      users: [],
+      authorities: ['ROLE_ADMIN', 'ROLE_COMMITTEE']
     }
   },
   mounted() {
