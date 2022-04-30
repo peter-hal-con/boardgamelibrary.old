@@ -20,6 +20,11 @@ export default new Router({
       path: '/createUser',
       name: 'createUser',
       component: () => import('../components/CreateUser.vue')
+    },
+    {
+      path: '/listUsers',
+      name: 'listUsers',
+      component: () => import('../components/ListUsers.vue')
     }
   ]
 })
