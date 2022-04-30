@@ -36,3 +36,19 @@ Feature: List users
     Then we will see an element with id "tr-admin@example.com"
     And we will see an element with id "tr-committee@example.com"
     And we will see an element with id "tr-test@example.com"
+
+
+  Scenario: The user list screen contains usernames
+    And we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "list_users"
+    Then the element with xpath "//table[@id='user_list']//tr[@id='tr-admin@example.com']//td[@id='username']" will contain "admin@example.com"
+    And the element with xpath "//table[@id='user_list']//tr[@id='tr-committee@example.com']//td[@id='username']" will contain "committee@example.com"
+
+
+  Scenario: The user list screen contains authorities
+    And we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "list_users"
+    Then the element with xpath "//table[@id='user_list']//tr[@id='tr-admin@example.com']//td[@id='ROLE_ADMIN']" will contain "✔"
+    And the element with xpath "//table[@id='user_list']//tr[@id='tr-admin@example.com']//td[@id='ROLE_COMMITTEE']" will be empty

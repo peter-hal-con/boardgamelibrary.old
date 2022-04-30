@@ -9,9 +9,9 @@
     </thead>
     <tbody>
       <tr v-for="(user) in users" :key="user.id" :id="'tr-'+user.username">
-        <td>{{user.username}}</td>
-        <td>{{(require('jsonpath').query(user.authorities, '$..authority').includes('ROLE_ADMIN')) ? "&#10004;" : " "}}</td>
-        <td>{{(require('jsonpath').query(user.authorities, '$..authority').includes('ROLE_COMMITTEE')) ? "&#10004;" : " "}}</td>
+        <td id="username">{{user.username}}</td>
+        <td id="ROLE_ADMIN">{{(require('jsonpath').query(user.authorities, '$..authority').includes('ROLE_ADMIN')) ? "&#10004;" : " "}}</td>
+        <td id="ROLE_COMMITTEE">{{(require('jsonpath').query(user.authorities, '$..authority').includes('ROLE_COMMITTEE')) ? "&#10004;" : " "}}</td>
       </tr>
     </tbody>
   </table>

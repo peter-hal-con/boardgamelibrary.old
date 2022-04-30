@@ -145,4 +145,18 @@ class WebStepDefinitions {
             !webDriver.findElement(By.id(id)).isSelected()
         }
     }
+
+    @Then("the element with xpath {string} will contain {string}")
+    public void the_element_with_xpath_will_contain(String xpath, String content) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            webDriver.findElement(By.xpath(xpath)).getText() == content
+        }
+    }
+
+    @Then("the element with xpath {string} will be empty")
+    public void the_element_with_xpath_will_be_empty(String xpath) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            webDriver.findElement(By.xpath(xpath)).getText() == ""
+        }
+    }
 }
