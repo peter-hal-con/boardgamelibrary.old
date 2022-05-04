@@ -28,7 +28,7 @@
         <td><input id="authority_ROLE_COMMITTEE" v-model="newUserDetails.authority_ROLE_COMMITTEE" type="checkbox" class="form-check-input" /></td>
       </tr>
     </table>
-    <button id="submit_update_user" type="submit" class="btn btn-dark btn-lg btn-block">Update User</button>
+    <button id="submit_update_user" type="submit" class="btn btn-dark btn-lg btn-block" :disabled="!passwords_match || !password_sufficient_length || !username_is_email">Update User</button>
   </form>
 </template>
 <script>
@@ -108,7 +108,7 @@ export default {
       return this.newUserDetails.password === this.newUserDetails.confirm_password;
     },
     password_sufficient_length: function() {
-      return this.newUserDetails.password.length >= 5;
+      return this.newUserDetails.password.length === 0 || this.newUserDetails.password.length >= 5;
     },
     username_is_email: function() {
       return String(this.newUserDetails.username)

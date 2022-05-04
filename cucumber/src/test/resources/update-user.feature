@@ -86,3 +86,44 @@ Feature: Update users
     And we click the element with id "submit_update_user"
     Then the user with username "test@example.com" will not have the authority "ROLE_COMMITTEE"
     And the user with username "test@example.com" will not have the authority "ROLE_ADMIN"
+
+
+  Scenario: When the password and confirm_password field values are different an alert will appear and the submit button will be disabled
+    Given the following users exist:
+      | username              | password  |
+      | test@example.com      | password1 |
+    And we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "list_users"
+	And we click the element with xpath "//table[@id='user_list']//tr[@id='tr-test@example.com']//td[@id='update']//a"
+    And we enter the value "password3" into the element with id "password"
+    And we enter the value "passwordThree" into the element with id "confirm_password"
+    Then we will see an element with id "password_mismatch"
+    And the element with id "submit_update_user" will be disabled
+
+
+  Scenario: When the password and confirm_password field values are too short an alert will appear and the submit button will be disabled
+    Given the following users exist:
+      | username              | password  |
+      | test@example.com      | password1 |
+    And we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "list_users"
+	And we click the element with xpath "//table[@id='user_list']//tr[@id='tr-test@example.com']//td[@id='update']//a"
+    When we enter the value "pass" into the element with id "password"
+    And we enter the value "pass" into the element with id "confirm_password"
+    Then we will see an element with id "password_too_short"
+    And the element with id "submit_update_user" will be disabled
+
+
+  Scenario: When the username field value is not an email address an alert will appear and the submit button will be disabled
+    Given the following users exist:
+      | username              | password  |
+      | test@example.com      | password1 |
+    And we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "list_users"
+	And we click the element with xpath "//table[@id='user_list']//tr[@id='tr-test@example.com']//td[@id='update']//a"
+    And we enter the value "test_at_example.com" into the element with id "username"
+    Then we will see an element with id "username_not_email"
+    And the element with id "submit_update_user" will be disabled
