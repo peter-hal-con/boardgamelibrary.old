@@ -78,7 +78,14 @@ class WebStepDefinitions {
 
     @When("we enter the value {string} into the element with id {string}")
     public void we_enter_the_value_into_the_element_with_id(String value, String id) {
-        webDriver.findElement(By.id(id)).sendKeys(value)
+        def element = webDriver.findElement(By.id(id))
+        element.clear()
+        element.sendKeys(value)
+    }
+
+    @When("we click the element with xpath {string}")
+    public void we_click_the_element_with_xpath(String xpath) {
+        new WebDriverWait(webDriver, Duration.ofSeconds(10)).until(ExpectedConditions.elementToBeClickable(By.xpath(xpath))).click();
     }
 
     @Then("we will see an element with id {string}")
@@ -157,6 +164,27 @@ class WebStepDefinitions {
     public void the_element_with_xpath_will_be_empty(String xpath) {
         await().atMost(Duration.ofSeconds(5)).until {
             webDriver.findElement(By.xpath(xpath)).getText() == ""
+        }
+    }
+
+    @Then("we will see an element with xpath {string}")
+    public void we_will_see_an_element_with_xpath(String xpath) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            webDriver.findElements(By.xpath(xpath)).size() == 1
+        }
+    }
+
+    @Then("the element with id {string} will contain {string}")
+    public void the_element_with_id_will_contain(String id, String content) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            content == webDriver.findElement(By.id(id)).getAttribute("value")
+        }
+    }
+
+    @Then("the element with id {string} will be checked")
+    public void the_element_with_id_will_be_checked(String id) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            webDriver.findElement(By.id(id)).isSelected()
         }
     }
 }

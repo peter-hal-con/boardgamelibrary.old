@@ -25,6 +25,12 @@ export default new Router({
       path: '/listUsers',
       name: 'listUsers',
       component: () => import('../components/ListUsers.vue')
+    },
+    {
+      path: '/updateUser/:id',
+      name: 'updateUser',
+      component: () => import('../components/UpdateUser.vue'),
+      props: true
     }
   ]
 })
