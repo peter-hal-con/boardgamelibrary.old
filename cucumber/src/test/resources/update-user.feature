@@ -33,6 +33,19 @@ Feature: Update users
     And we will see an element with id "submit_update_user"
 
 
+  Scenario: Submitting a user update returns us to the user list screen
+    Given the following users exist:
+      | username              | password  |
+      | test@example.com      | password1 |
+    And we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "list_users"
+	And we click the element with xpath "//table[@id='user_list']//tr[@id='tr-test@example.com']//td[@id='update']//a"
+    And we enter the value "test2@example.com" into the element with id "username"
+    And we click the element with id "submit_update_user"
+    Then we will see an element with id "user_list"
+
+
   Scenario: Successfully changing a user's username
     Given the following users exist:
       | username              | password  |

@@ -74,33 +74,29 @@ export default {
   },
   methods: {
     update_user: function() {
-      let mutation = ''
+      let mutation = 'mutation {\n'
       if(this.newUserDetails.username !== this.oldUserDetails.username || this.newUserDetails.password !== "") {
-        mutation += 'mutation { userUpdate(id:'+this.id+', user:{'
+        mutation += '  userUpdate(id:'+this.id+', user:{'
         if(this.newUserDetails.username !== this.oldUserDetails.username) {
           mutation += ' username:"'+this.newUserDetails.username+'"'
         }
         if(this.newUserDetails.password !== "") {
           mutation += ' password:"'+this.newUserDetails.password+'"'
         }
-        mutation += ' }) { errors { message } } }'
-        console.log(mutation)  // eslint-disable-line no-console
-        fetchGraphQL(mutation).then(response => console.log(response)).catch(error => console.error(error)); // eslint-disable-line no-console
+        mutation += ' }) { errors { message } }\n'
       }
-
       for(let authority_id = 0; authority_id < this.available_authorities.length; authority_id++) {
         if(this.newUserDetails["authority_"+this.available_authorities[authority_id]] !== this.oldUserDetails["authority_"+this.available_authorities[authority_id]]) {
           if(this.newUserDetails["authority_"+this.available_authorities[authority_id]]) {
-            mutation = 'mutation { userAuthorityCreate(userAuthority:{ user:{ id:'+this.id+' } authority:{ id:'+(authority_id+1)+' }}){ errors { message } } }'
-            console.log(mutation)  // eslint-disable-line no-console
-            fetchGraphQL(mutation).then(response => console.log(response)).catch(error => console.error(error)); // eslint-disable-line no-console
+            mutation += '  userAuthorityCreate(userAuthority:{ user:{ id:'+this.id+' } authority:{ id:'+(authority_id+1)+' }}) { errors { message } }\n'
           } else {
-            mutation = 'mutation { userAuthorityDelete(user:'+this.id+' authority:'+(authority_id+1)+'){error} }'
-            console.log(mutation)  // eslint-disable-line no-console
-            fetchGraphQL(mutation).then(response => console.log(response)).catch(error => console.error(error)); // eslint-disable-line no-console
+            mutation += '  userAuthorityDelete(user:'+this.id+' authority:'+(authority_id+1)+') { error }\n'
           }
         }
       }
+      mutation += '}'
+
+      fetchGraphQL(mutation).then(this.$router.push('/listUsers')).catch(error => console.error(error)); // eslint-disable-line no-console
     }
   },
   computed: {
