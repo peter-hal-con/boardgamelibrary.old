@@ -8,6 +8,7 @@ import java.time.Duration
 
 import org.openqa.selenium.By
 import org.openqa.selenium.SessionNotCreatedException
+import org.openqa.selenium.StaleElementReferenceException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
@@ -78,9 +79,15 @@ class WebStepDefinitions {
 
     @When("we enter the value {string} into the element with id {string}")
     public void we_enter_the_value_into_the_element_with_id(String value, String id) {
-        def element = webDriver.findElement(By.id(id))
-        element.clear()
-        element.sendKeys(value)
+        for(;;) {
+            try {
+                def element = webDriver.findElement(By.id(id))
+                element.clear()
+                element.sendKeys(value)
+                return
+            } catch(StaleElementReferenceException e) {
+            }
+        }
     }
 
     @When("we click the element with xpath {string}")
