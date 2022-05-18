@@ -61,13 +61,17 @@ class WebStepDefinitions {
     @When("we direct the browser to {string}")
     public void we_direct_the_browser_to(String path) {
         def url = "http://localhost:8080${path}"
-        await().atMost(Duration.ofSeconds(10)).until {
-            if(webDriver.currentUrl != url) {
-                webDriver.get(url)
-                return false
-            } else {
-                return true
+        if(path.startsWith("/#/")) {
+            await().atMost(Duration.ofSeconds(10)).until {
+                if(webDriver.currentUrl != url) {
+                    webDriver.get(url)
+                    return false
+                } else {
+                    return true
+                }
             }
+        } else {
+            webDriver.get(url)
         }
     }
 
