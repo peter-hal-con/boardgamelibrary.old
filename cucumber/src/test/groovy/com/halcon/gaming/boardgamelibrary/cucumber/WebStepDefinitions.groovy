@@ -60,7 +60,15 @@ class WebStepDefinitions {
     @Given("we have directed the browser to {string}")
     @When("we direct the browser to {string}")
     public void we_direct_the_browser_to(String path) {
-        webDriver.get("http://localhost:8080${path}")
+        def url = "http://localhost:8080${path}"
+        await().atMost(Duration.ofSeconds(10)).until {
+            if(webDriver.currentUrl != url) {
+                webDriver.get(url)
+                return false
+            } else {
+                return true
+            }
+        }
     }
 
     @Given("we are logged in as {string}")
