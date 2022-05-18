@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="update_user">
+  <form v-if="ready" @submit.prevent="update_user">
     <h3>Update User {{ id }}</h3>
     <div :id="'message_'+message.type" v-if="message.type" :class="'alert alert-'+message.type" role="alert">{{message.text}}</div>
     <div id="username_not_email" v-if="!username_is_email" class="alert alert-danger" role="alert">Username is not an email address.</div>
@@ -39,6 +39,7 @@ export default {
   props: ["id"],
   data() {
     return {
+      ready: false,
       message: {
         type: "",
         text: ""
@@ -70,6 +71,7 @@ export default {
         if(authority.authority === "ROLE_COMMITTEE") this.oldUserDetails.authority_ROLE_COMMITTEE = true
       }
       this.newUserDetails = JSON.parse(JSON.stringify(this.oldUserDetails));
+      this.ready = true
     })
   },
   methods: {
