@@ -206,4 +206,12 @@ class WebStepDefinitions {
             webDriver.findElement(By.id(id)).isSelected()
         }
     }
+
+    @Then("the browser will be directed to {string}")
+    public void the_browser_will_be_directed_to(String path) {
+        def url = "http://localhost:8080${path}"
+        await().atMost(Duration.ofSeconds(5)).until {
+            webDriver.currentUrl == url
+        }
+    }
 }
