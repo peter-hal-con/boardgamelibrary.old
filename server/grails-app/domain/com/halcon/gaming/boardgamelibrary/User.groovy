@@ -31,6 +31,7 @@ class User implements Serializable {
         }
     }
 
+    Long id
     String username
     String password
     boolean enabled = true

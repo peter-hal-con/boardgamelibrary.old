@@ -7,6 +7,7 @@
       <a v-if="is_admin" id="create_user" class="dropdown-item" href="/#/createUser">Create User</a>
       <a v-if="is_admin" id="list_users" class="dropdown-item" href="/#/listUsers">List Users</a>
       <div v-if="is_admin" class="dropdown-divider"></div>
+      <a id="password_change" class="dropdown-item" href="/#/change-password/">Change Password</a>
       <a id="logout" v-on:click="logout()" class="dropdown-item" href="#">Logout</a>
     </div>
   </div>

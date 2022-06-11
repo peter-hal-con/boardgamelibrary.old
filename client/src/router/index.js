@@ -31,6 +31,11 @@ export default new Router({
       name: 'updateUser',
       component: () => import('../components/UpdateUser.vue'),
       props: true
+    },
+    {
+      path: '/change-password',
+      name: 'change-password',
+      component: () => import('../components/ChangePassword.vue')
     }
   ]
 })

@@ -43,7 +43,7 @@ Feature: Update users
 	And we click the element with xpath "//table[@id='user_list']//tr[@id='tr-test@example.com']//td[@id='update']//a"
     And we enter the value "test2@example.com" into the element with id "username"
     And we click the element with id "submit_update_user"
-    Then we will see an element with id "user_list"
+    Then the browser will be directed to "/#/listUsers"
 
 
   Scenario: Successfully changing a user's username

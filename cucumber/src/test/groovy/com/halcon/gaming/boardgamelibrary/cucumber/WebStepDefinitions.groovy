@@ -60,7 +60,19 @@ class WebStepDefinitions {
     @Given("we have directed the browser to {string}")
     @When("we direct the browser to {string}")
     public void we_direct_the_browser_to(String path) {
-        webDriver.get("http://localhost:8080${path}")
+        def url = "http://localhost:8080${path}"
+        if(path.startsWith("/#/")) {
+            await().atMost(Duration.ofSeconds(10)).until {
+                if(webDriver.currentUrl != url) {
+                    webDriver.get(url)
+                    return false
+                } else {
+                    return true
+                }
+            }
+        } else {
+            webDriver.get(url)
+        }
     }
 
     @Given("we are logged in as {string}")
@@ -192,6 +204,14 @@ class WebStepDefinitions {
     public void the_element_with_id_will_be_checked(String id) {
         await().atMost(Duration.ofSeconds(5)).until {
             webDriver.findElement(By.id(id)).isSelected()
+        }
+    }
+
+    @Then("the browser will be directed to {string}")
+    public void the_browser_will_be_directed_to(String path) {
+        def url = "http://localhost:8080${path}"
+        await().atMost(Duration.ofSeconds(5)).until {
+            webDriver.currentUrl == url
         }
     }
 }
