@@ -4,6 +4,8 @@
       {{username}}
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a v-if="is_admin_or_committee" id="create_copy" class="dropdown-item" href="/#/createCopy">Create Library Items</a>
+      <div v-if="is_admin_or_committee" class="dropdown-divider"></div>
       <a v-if="is_admin" id="create_user" class="dropdown-item" href="/#/createUser">Create User</a>
       <a v-if="is_admin" id="list_users" class="dropdown-item" href="/#/listUsers">List Users</a>
       <div v-if="is_admin" class="dropdown-divider"></div>
@@ -20,7 +22,8 @@ export default {
   data() {
     return {
       username: JSON.parse(localStorage.auth).username,
-      is_admin: JSON.parse(localStorage.auth).roles.includes('ROLE_ADMIN')
+      is_admin: JSON.parse(localStorage.auth).roles.includes('ROLE_ADMIN'),
+      is_admin_or_committee: JSON.parse(localStorage.auth).roles.includes('ROLE_ADMIN') || JSON.parse(localStorage.auth).roles.includes('ROLE_COMMITTEE')
     }
   },
   methods: {
