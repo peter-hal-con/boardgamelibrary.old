@@ -20,3 +20,11 @@ Feature: Create library items
       | committee@example.com | will             |
       | test@example.com      | will not         |
 
+
+  Scenario: The create library item dialog
+    Given we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "create_copy"
+    Then we will see an element with id "copy_title"
+    And we will see an element with id "submit_create_copy"
+
