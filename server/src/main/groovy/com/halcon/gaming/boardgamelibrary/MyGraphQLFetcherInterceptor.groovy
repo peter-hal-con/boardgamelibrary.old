@@ -24,23 +24,24 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
     }
 
     static boolean isAdminUser(User user) {
-        return user.authorities.contains(Authority.findByAuthority("ROLE_ADMIN"))
+        return user != null && user.authorities.contains(Authority.findByAuthority("ROLE_ADMIN"))
+    }
+
+    static boolean isOperationWithName(def node, Operation operation, String name) {
+        return  node.operation == operation &&
+                node.children.size() == 1 &&
+                node.children[0].selections.size() == 1 &&
+                node.children[0].selections[0].name == name
     }
 
     static boolean isUserByUsername(Document document) {
         return  document.children.size() == 1 &&
-                document.children[0].operation == Operation.QUERY &&
-                document.children[0].children.size() == 1 &&
-                document.children[0].children[0].selections.size() == 1 &&
-                document.children[0].children[0].selections[0].name == 'userByUsername'
+                isOperationWithName(document.children[0], Operation.QUERY, "userByUsername")
     }
 
     static boolean isUserUpdate(Document document) {
         return  document.children.size() == 1 &&
-                document.children[0].operation == Operation.MUTATION &&
-                document.children[0].children.size() == 1 &&
-                document.children[0].children[0].selections.size() == 1 &&
-                document.children[0].children[0].selections[0].name == 'userUpdate'
+                isOperationWithName(document.children[0], Operation.MUTATION, "userUpdate")
     }
 
     static Argument findArgumentByName(List<Argument> arguments, String name) {
@@ -83,11 +84,18 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
                 isOnlyChangingPassword(document)
     }
 
+    static boolean isUserCreatingGame(User currentUser, Document document) {
+        return  currentUser != null &&
+                document.children.size() == 1 &&
+                isOperationWithName(document.children[0], Operation.MUTATION, "gameCreate")
+    }
+
     boolean permitOperation(User currentUser, Document document) {
         return  isRunningInDevelopmentEnvironment() ||
                 isAdminUser(currentUser) ||
                 isCurrentUserRetrievingTheirOwnId(currentUser, document) ||
-                isCurrentUserChangingTheirOwnPassword(currentUser, document)
+                isCurrentUserChangingTheirOwnPassword(currentUser, document) ||
+                isUserCreatingGame(currentUser, document)
     }
 
     @Override

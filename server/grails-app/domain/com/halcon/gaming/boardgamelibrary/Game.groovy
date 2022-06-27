@@ -1,6 +1,8 @@
 package com.halcon.gaming.boardgamelibrary
 
 class Game {
+    static graphql = true
+
     String title
     Long bggId
 
