@@ -55,6 +55,7 @@ public class StepDefinitions {
         assertFalse(restClient.hasAccessToken())
     }
 
+    @Given("we have performed a GraphQL query {string}")
     @When("we perform a GraphQL query {string}")
     public void we_perform_a_graph_ql_query(String query) {
         restClient.graphQL(query)

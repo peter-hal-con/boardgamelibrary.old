@@ -34,5 +34,6 @@ class TestOnlyController {
     def reset() {
         UserAuthority.findAll().each { it.delete(flush:true) }
         User.findAll().each { it.delete(flush:true) }
+        Game.findAll().each { it.delete(flush:true) }
     }
 }
