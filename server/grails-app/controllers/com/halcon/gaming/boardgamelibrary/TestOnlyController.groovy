@@ -32,6 +32,7 @@ class TestOnlyController {
 
     @Transactional
     def reset() {
+        Copy.findAll().each { it.delete(flush:true) }
         UserAuthority.findAll().each { it.delete(flush:true) }
         User.findAll().each { it.delete(flush:true) }
         Game.findAll().each { it.delete(flush:true) }
