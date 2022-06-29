@@ -10,11 +10,13 @@ import org.openqa.selenium.By
 import org.openqa.selenium.SessionNotCreatedException
 import org.openqa.selenium.StaleElementReferenceException
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.html5.LocalStorage
 import org.openqa.selenium.html5.WebStorage
 import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
 
 import groovy.json.JsonSlurper
@@ -212,6 +214,28 @@ class WebStepDefinitions {
         def url = "http://localhost:8080${path}"
         await().atMost(Duration.ofSeconds(5)).until {
             webDriver.currentUrl == url
+        }
+    }
+
+    @Then("the select with id {string} will have an option {string}")
+    public void the_select_with_id_will_have_an_option(String id, String option) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            Select select = new Select(webDriver.findElement(By.id(id)));
+            for(WebElement o : select.getOptions()) {
+                if(o.getText() == option) return true;
+            }
+            return false;
+        }
+    }
+
+    @Then("the select with id {string} will not have an option {string}")
+    public void the_select_with_id_will_not_have_an_option(String id, String option) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            Select select = new Select(webDriver.findElement(By.id(id)));
+            for(WebElement o : select.getOptions()) {
+                if(o.getText() == option) return false;
+            }
+            return true;
         }
     }
 }
