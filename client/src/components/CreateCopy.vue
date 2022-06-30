@@ -4,8 +4,8 @@
     <div :id="'message_'+message.type" v-if="message.type" :class="'alert alert-'+message.type" role="alert">{{message.text}}</div>
     <div class="form-group">
       <label for="copy_owner">Owner</label>
-      <select class="custom-select" id="copy_owner">
-        <option v-for="owner in owners" :key="owner.id" :id="owner.id">{{owner.username}}</option>
+      <select class="custom-select" id="copy_owner" v-model="copyOwnerId">
+        <option v-for="owner in owners" :key="owner.id" :value="owner.id">{{owner.username}}</option>
       </select>
     </div>
     <div class="form-group">
@@ -35,6 +35,7 @@ export default {
       },
       selectedTitle: null,
       owners: [],
+      copyOwnerId: null
     }
   },
   created: function () {
@@ -44,11 +45,17 @@ export default {
       fetchGraphQL('query {userList {id, username}}')
       .then(response => {
         this.owners = response.data.userList
+        for(const o of this.owners) {
+          if(o.username === currentUser.username) {
+            this.copyOwnerId = o.id
+          }
+        }
       })
     } else {
       fetchGraphQL('query {userByUsername(username:"' + currentUser.username + '") {id}}')
       .then(response => {
         this.owners = [{username:currentUser.username, id:response.data.userByUsername.id}]
+        this.copyOwnerId = this.owners[0].id
       })
     }
   },

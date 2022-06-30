@@ -220,7 +220,7 @@ class WebStepDefinitions {
     @Then("the select with id {string} will have an option {string}")
     public void the_select_with_id_will_have_an_option(String id, String option) {
         await().atMost(Duration.ofSeconds(5)).until {
-            Select select = new Select(webDriver.findElement(By.id(id)));
+            Select select = new Select(webDriver.findElement(By.id(id)))
             for(WebElement o : select.getOptions()) {
                 if(o.getText() == option) return true;
             }
@@ -231,11 +231,19 @@ class WebStepDefinitions {
     @Then("the select with id {string} will not have an option {string}")
     public void the_select_with_id_will_not_have_an_option(String id, String option) {
         await().atMost(Duration.ofSeconds(5)).until {
-            Select select = new Select(webDriver.findElement(By.id(id)));
+            Select select = new Select(webDriver.findElement(By.id(id)))
             for(WebElement o : select.getOptions()) {
                 if(o.getText() == option) return false;
             }
             return true;
+        }
+    }
+
+    @Then("the select with id {string} will have the {string} option selected")
+    public void the_select_with_id_will_have_the_option_selected(String id, String option) {
+        await().atMost(Duration.ofSeconds(5)).until {
+            Select select = new Select(webDriver.findElement(By.id(id)))
+            return new Select(webDriver.findElement(By.id(id))).getFirstSelectedOption().getText() == option
         }
     }
 }

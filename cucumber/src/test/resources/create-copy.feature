@@ -46,3 +46,13 @@ Feature: Create library items
     Then the select with id "copy_owner" will have an option "committee@example.com"
     Then the select with id "copy_owner" will not have an option "admin@example.com"
     Then the select with id "copy_owner" will not have an option "test@example.com"
+
+
+  Scenario: The create library item dialog will list only the logged in users when an committee user is logged in
+    Given the following users exist:
+      | username              | password  | authorities    |
+      | admin2@example.com    | password4 | ROLE_ADMIN     |
+    And we are logged in as "admin2@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "create_copy"
+    Then the select with id "copy_owner" will have the "admin2@example.com" option selected
