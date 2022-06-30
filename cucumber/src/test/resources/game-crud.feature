@@ -32,3 +32,10 @@ Feature: Creation, retrieval, update, and deletion of games
     Given we have performed a GraphQL query 'mutation{gameCreate(game:{title:"Crossbows and Catapults", bggId:2129}) {id}}'
     When we perform a GraphQL query "query{gameList{title, bggId}}"
     Then the result of "$.data.gameList[0]" will be '[title:Crossbows and Catapults, bggId:2129]'
+
+
+  @retrieve
+  Scenario: We can retrieve a game and its bggId
+    Given we have performed a GraphQL query 'mutation{gameCreate(game:{title:"Crossbows and Catapults", bggId:2129}) {id}}'
+    When we perform a GraphQL query "query{gameByBggId(bggId:2129){title, bggId}}"
+    Then the result of "$.data.gameByBggId" will be '[title:Crossbows and Catapults, bggId:2129]'
