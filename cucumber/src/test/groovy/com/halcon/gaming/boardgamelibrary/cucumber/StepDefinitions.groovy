@@ -1,6 +1,9 @@
 package com.halcon.gaming.boardgamelibrary.cucumber
 
+import static org.awaitility.Awaitility.*
 import static org.junit.jupiter.api.Assertions.*
+
+import java.util.concurrent.TimeUnit
 
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -74,5 +77,14 @@ public class StepDefinitions {
     @Then("the result of {string} will have a value")
     public void the_result_of_will_have_a_value(String jsonPath) {
         assertNotNull(restClient.extractJsonPathFromResponse(jsonPath).toString())
+    }
+
+    @Then("there will be a game with the name {string}")
+    public void there_will_be_a_game_with_the_name(String title) {
+        await().atMost(5, TimeUnit.SECONDS).until {
+            restClient.authenticate("admin@example.com", userRepository.userPassword("admin@example.com"))
+            restClient.graphQL("query{gameByTitle(title:\"${title}\"){title}}")
+            return title == restClient.extractJsonPathFromResponse('$.data.gameByTitle.title')
+        }
     }
 }

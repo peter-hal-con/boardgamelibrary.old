@@ -60,9 +60,16 @@ export default {
     }
   },
   methods: {
+    create_game: function(title) {
+      return fetchGraphQL('mutation{gameCreate(game:{title:"' + title.name + '", bggId:' + title.bgg_id + '}) {id, title, bggId}}')
+    },
+
     create_copy: function() {
-      this.message.type = "success"
-      this.message.text = "Successfully created a copy of: '" + this.selectedTitle.name + "' belonging to '" + this.copyOwnerId + "'"
+      this.create_game(this.selectedTitle)
+      .then(() => {
+        this.message.type = "success"
+        this.message.text = "Successfully created a copy of: '" + this.selectedTitle.name + "' belonging to '" + this.copyOwnerId + "'"
+      })
     }
   }
 };
