@@ -51,6 +51,7 @@ class RestClient {
             fail()
         }
     }
+
     public void authenticate(String username, String password) {
         accessToken = performAuthentication(username, password)
     }

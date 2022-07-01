@@ -61,6 +61,8 @@ export default {
   },
   methods: {
     create_copy: function() {
+      this.message.type = "success"
+      this.message.text = "Successfully created a copy of: '" + this.selectedTitle.name + "' belonging to '" + this.copyOwnerId + "'"
     }
   }
 };

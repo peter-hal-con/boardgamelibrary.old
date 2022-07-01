@@ -56,3 +56,13 @@ Feature: Create library items
     When we click the element with id "user_dropdown"
     And we click the element with id "create_copy"
     Then the select with id "copy_owner" will have the "admin2@example.com" option selected
+
+
+  @this-one
+  Scenario: The create library item dialog will display a message when a new copy is created
+    Given we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "create_copy"
+    And we enter the value "Crossbows and Catapults" into the bgg autocomplete with id "copy_game"
+    And we click the element with id "submit_create_copy"
+    Then we will see an element with id "message_success"

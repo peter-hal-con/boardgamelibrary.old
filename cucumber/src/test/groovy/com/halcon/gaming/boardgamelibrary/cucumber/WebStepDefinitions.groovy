@@ -246,4 +246,25 @@ class WebStepDefinitions {
             return new Select(webDriver.findElement(By.id(id))).getFirstSelectedOption().getText() == option
         }
     }
+
+    @When("we enter the value {string} into the bgg autocomplete with id {string}")
+    public void we_enter_the_value_into_the_bgg_autocomplete_with_id(String value, String id) {
+        await().atMost(Duration.ofSeconds(15)).until {
+            try {
+                List<WebElement> tmp = webDriver.findElements(By.id(id))
+                if(tmp.empty) return false
+                WebElement bggAutocomplete = tmp[0]
+
+                bggAutocomplete.sendKeys(value)
+                for(WebElement option : webDriver.findElements(By.xpath("//div[@id='${id}']//ul/li"))) {
+                    if(option.getText().startsWith(value)) {
+                        option.click()
+                        return true
+                    }
+                }
+            } catch(StaleElementReferenceException e) {
+            }
+            return false
+        }
+    }
 }
