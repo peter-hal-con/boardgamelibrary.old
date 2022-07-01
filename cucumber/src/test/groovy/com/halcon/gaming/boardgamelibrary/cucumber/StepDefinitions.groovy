@@ -87,4 +87,14 @@ public class StepDefinitions {
             return title == restClient.extractJsonPathFromResponse('$.data.gameByTitle.title')
         }
     }
+
+    @Then("there will be a copy of the game named {string} belonging to {string}")
+    public void there_will_be_a_copy_of_the_game_named_belonging_to(String title, String username) {
+        await().atMost(5, TimeUnit.SECONDS).until {
+            restClient.authenticate("admin@example.com", userRepository.userPassword("admin@example.com"))
+            restClient.graphQL("query{copyList{game{title} owner{username}}}")
+            return title == restClient.extractJsonPathFromResponse('$.data.copyList[0].game.title') &&
+                    username == restClient.extractJsonPathFromResponse('$.data.copyList[0].owner.username')
+        }
+    }
 }

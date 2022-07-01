@@ -66,9 +66,14 @@ export default {
 
     create_copy: function() {
       this.create_game(this.selectedTitle)
-      .then(() => {
-        this.message.type = "success"
-        this.message.text = "Successfully created a copy of: '" + this.selectedTitle.name + "' belonging to '" + this.copyOwnerId + "'"
+      .then(result => {
+        const gameId = result.data.gameCreate.id
+        const ownerId = this.copyOwnerId
+        fetchGraphQL('mutation{copyCreate(copy:{game:{id:' + gameId + '}, owner:{id:' + ownerId + '}}) {id, game {title}, owner {username}}}')
+        .then((result) => {
+          this.message.type = "success"
+          this.message.text = "Successfully created a copy of: '" + result.data.copyCreate.game.title + "' belonging to '" + result.data.copyCreate.owner.username + "'"
+        })
       })
     }
   }
