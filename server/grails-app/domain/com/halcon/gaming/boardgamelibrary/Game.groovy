@@ -17,6 +17,15 @@ class Game {
                 }
             })
         }
+        query('gameByTitle', Game) {
+            argument("title", String)
+            dataFetcher(new SingleEntityDataFetcher(Game.gormPersistentEntity) {
+                @Override
+                protected DetachedCriteria buildCriteria(DataFetchingEnvironment environment) {
+                    Game.where { title == environment.getArgument('title') }
+                }
+            })
+        }
     }
 
     String title

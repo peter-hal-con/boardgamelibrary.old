@@ -58,7 +58,6 @@ Feature: Create library items
     Then the select with id "copy_owner" will have the "admin2@example.com" option selected
 
 
-  @this-one
   Scenario: The create library item dialog will display a message when a new copy is created
     Given we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"
