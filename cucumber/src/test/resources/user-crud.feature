@@ -36,11 +36,11 @@ Feature: Creation, retrieval, update, and deletion of users
 
 
   @retrieve
-  Scenario Outline: We can retrieve an individual user
+  Scenario Outline: We can retrieve an individual user by their id
     Given the following users exist:
       | username              | password  | authorities    |
       | committee@example.com | password2 | ROLE_COMMITTEE |
-    When we retrieve the user with username "<username>"
+    When we retrieve the user with username "<username>" by their id
     Then the result of "$.data.user.authorities[0].authority" will be "<result>"
 
     Examples:
