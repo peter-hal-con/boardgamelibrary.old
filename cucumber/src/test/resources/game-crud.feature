@@ -20,10 +20,9 @@ Feature: Creation, retrieval, update, and deletion of games
     And the result of "$.data.gameCreate.bggId" will be '2129'
 
 
-  @this-one
   @create
   Scenario: We cannot create multiple games with the same bggId
-    Given we have performed a GraphQL query 'mutation{gameCreate(game:{title:"Crossbows and Catapults", bggId:2129}) {id}}'
+    Given we have created a game with title "Crossbows and Catapults" and bggid 2129
     When we perform a GraphQL query 'mutation{gameCreate(game:{title:"Crossbows and Catapults", bggId:2129}) {id}}'
     Then the result of "$.data.gameCreate.id" will be 'null'
 

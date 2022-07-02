@@ -64,15 +64,26 @@ export default {
       return fetchGraphQL('mutation{gameCreate(game:{title:"' + title.name + '", bggId:' + title.bgg_id + '}) {id, title, bggId}}')
     },
 
+    ensure_game_exists: function(title) {
+      return fetchGraphQL('query{gameByBggId(bggId:' + title.bgg_id + ') {id, title, bggId}}')
+      .then(response => {
+        if(response.data.gameByBggId === null) {
+          return this.create_game(title).then(response => { return response.data.gameCreate })
+        } else {
+          return response.data.gameByBggId
+        }
+      })
+    },
+
     create_copy: function() {
-      this.create_game(this.selectedTitle)
-      .then(result => {
-        const gameId = result.data.gameCreate.id
+      this.ensure_game_exists(this.selectedTitle)
+      .then(response => {
+        const gameId = response.id
         const ownerId = this.copyOwnerId
         fetchGraphQL('mutation{copyCreate(copy:{game:{id:' + gameId + '}, owner:{id:' + ownerId + '}}) {id, game {title}, owner {username}}}')
-        .then((result) => {
+        .then(response => {
           this.message.type = "success"
-          this.message.text = "Successfully created a copy of: '" + result.data.copyCreate.game.title + "' belonging to '" + result.data.copyCreate.owner.username + "'"
+          this.message.text = "Successfully created a copy of: '" + response.data.copyCreate.game.title + "' belonging to '" + response.data.copyCreate.owner.username + "'"
         })
       })
     }
