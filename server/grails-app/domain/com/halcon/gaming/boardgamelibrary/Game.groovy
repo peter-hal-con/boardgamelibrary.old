@@ -33,6 +33,6 @@ class Game {
 
     static constraints = {
         title nullable:false
-        bggId nullable:true
+        bggId nullable:true, unique:true
     }
 }

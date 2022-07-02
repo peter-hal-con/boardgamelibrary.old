@@ -20,6 +20,14 @@ Feature: Creation, retrieval, update, and deletion of games
     And the result of "$.data.gameCreate.bggId" will be '2129'
 
 
+  @this-one
+  @create
+  Scenario: We cannot create multiple games with the same bggId
+    Given we have performed a GraphQL query 'mutation{gameCreate(game:{title:"Crossbows and Catapults", bggId:2129}) {id}}'
+    When we perform a GraphQL query 'mutation{gameCreate(game:{title:"Crossbows and Catapults", bggId:2129}) {id}}'
+    Then the result of "$.data.gameCreate.id" will be 'null'
+
+
   @retrieve
   Scenario: We can retrieve a game
     Given we have performed a GraphQL query 'mutation{gameCreate(game:{title:"Some Title"}) {id}}'
@@ -28,7 +36,7 @@ Feature: Creation, retrieval, update, and deletion of games
 
 
   @retrieve
-  Scenario: We can retrieve a a list of games
+  Scenario: We can retrieve a list of games
     Given we have performed a GraphQL query 'mutation{gameCreate(game:{title:"Crossbows and Catapults", bggId:2129}) {id}}'
     When we perform a GraphQL query "query{gameList{title, bggId}}"
     Then the result of "$.data.gameList[0]" will be '[title:Crossbows and Catapults, bggId:2129]'
