@@ -45,7 +45,7 @@ class MyGraphQLFetcherInterceptorSpec extends Specification implements DataTest 
         new MyGraphQLFetcherInterceptor().permitOperation(currentUser, Parser.parse("mutation{userUpdate(id:${currentUser.id}, user:{password:\"test\"}) {id}}"))
     }
 
-    def "test any user can create a game"() {
+    def "test any user can create a title"() {
         given:
         Authority userAuthority = [authority:authority] as Authority
         userAuthority.save(flush:true)
@@ -57,13 +57,13 @@ class MyGraphQLFetcherInterceptorSpec extends Specification implements DataTest 
         new MyGraphQLFetcherInterceptor().permitOperation(currentUser, Parser.parse(document)) == permitted
 
         where:
-        document                                               | authority            | permitted
-        'mutation{gameCreate(game:{title:"Some Title"}) {id}}' | "ROLE_ADMIN"         | true
-        'mutation{gameCreate(game:{title:"Some Title"}) {id}}' | "ROLE_COMMITTEE"     | true
+        document                                                | authority            | permitted
+        'mutation{titleCreate(title:{name:"Some Title"}) {id}}' | "ROLE_ADMIN"         | true
+        'mutation{titleCreate(title:{name:"Some Title"}) {id}}' | "ROLE_COMMITTEE"     | true
     }    
 
-    def "test a user is required to create a game"() {
+    def "test a user is required to create a title"() {
         expect:
-        new MyGraphQLFetcherInterceptor().permitOperation(null, Parser.parse('mutation{gameCreate(game:{title:"Some Title"}) {id}}')) == false
+        new MyGraphQLFetcherInterceptor().permitOperation(null, Parser.parse('mutation{titleCreate(title:{name:"Some Title"}) {id}}')) == false
     }    
 }

@@ -35,6 +35,6 @@ class TestOnlyController {
         Copy.findAll().each { it.delete(flush:true) }
         UserAuthority.findAll().each { it.delete(flush:true) }
         User.findAll().each { it.delete(flush:true) }
-        Game.findAll().each { it.delete(flush:true) }
+        Title.findAll().each { it.delete(flush:true) }
     }
 }

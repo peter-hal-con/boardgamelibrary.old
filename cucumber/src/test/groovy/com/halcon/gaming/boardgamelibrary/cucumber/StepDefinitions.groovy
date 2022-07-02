@@ -79,21 +79,21 @@ public class StepDefinitions {
         assertNotNull(restClient.extractJsonPathFromResponse(jsonPath).toString())
     }
 
-    @Then("there will be a game with the name {string}")
-    public void there_will_be_a_game_with_the_name(String title) {
+    @Then("there will be a title with the name {string}")
+    public void there_will_be_a_title_with_the_name(String name) {
         await().atMost(5, TimeUnit.SECONDS).until {
             restClient.authenticate("admin@example.com", userRepository.userPassword("admin@example.com"))
-            restClient.graphQL("query{gameByTitle(title:\"${title}\"){title}}")
-            return title == restClient.extractJsonPathFromResponse('$.data.gameByTitle.title')
+            restClient.graphQL("query{titleByName(name:\"${name}\"){name}}")
+            return name == restClient.extractJsonPathFromResponse('$.data.titleByName.name')
         }
     }
 
-    @Then("there will be a copy of the game named {string} belonging to {string}")
-    public void there_will_be_a_copy_of_the_game_named_belonging_to(String title, String username) {
+    @Then("there will be a copy of the title named {string} belonging to {string}")
+    public void there_will_be_a_copy_of_the_title_named_belonging_to(String name, String username) {
         await().atMost(5, TimeUnit.SECONDS).until {
             restClient.authenticate("admin@example.com", userRepository.userPassword("admin@example.com"))
-            restClient.graphQL("query{copyList{game{title} owner{username}}}")
-            return title == restClient.extractJsonPathFromResponse('$.data.copyList[0].game.title') &&
+            restClient.graphQL("query{copyList{title{name} owner{username}}}")
+            return name == restClient.extractJsonPathFromResponse('$.data.copyList[0].title.name') &&
                     username == restClient.extractJsonPathFromResponse('$.data.copyList[0].owner.username')
         }
     }

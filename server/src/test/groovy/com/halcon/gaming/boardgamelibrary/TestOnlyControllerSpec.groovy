@@ -7,7 +7,7 @@ import spock.lang.Specification
 class TestOnlyControllerSpec extends Specification implements ControllerUnitTest<TestOnlyController>, DataTest {
 
     Class<?>[] getDomainClassesToMock(){
-        return [User, Authority, UserAuthority, Game, Copy] as Class[]
+        return [User, Authority, UserAuthority, Title, Copy] as Class[]
     }
 
     def setup() {
@@ -83,28 +83,28 @@ class TestOnlyControllerSpec extends Specification implements ControllerUnitTest
             UserAuthority.findAll().empty
     }
 
-    void "test reset on game"() {
+    void "test reset on title"() {
         given:
-            Game game = [title:"Crossbows and Catapults", bggId:2129] as Game
-            game.save(flush:true)
+            Title title = [title:"Crossbows and Catapults", bggId:2129] as Title
+            title.save(flush:true)
 
         when:
             controller.reset()
 
         then:
             status == 200
-            Game.findAll().empty
+            Title.findAll().empty
     }
 
     void "test reset on copy"() {
         given:
-            Game game = [title:"Crossbows and Catapults", bggId:2129] as Game
-            game.save(flush:true)
+            Title title = [title:"Crossbows and Catapults", bggId:2129] as Title
+            title.save(flush:true)
 
             User user = [username:"test@example.com", password:"password3"] as User
             user.save(flush:true)
 
-            Copy copy = [game:game, owner:user] as Copy
+            Copy copy = [title:title, owner:user] as Copy
             copy.save(flush:true)
 
         when:

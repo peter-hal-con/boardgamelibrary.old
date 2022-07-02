@@ -26,7 +26,7 @@ Feature: Create library items
     When we click the element with id "user_dropdown"
     And we click the element with id "create_copy"
     Then we will see an element with id "copy_owner"
-    And we will see an element with id "copy_game"
+    And we will see an element with id "copy_title"
     And we will see an element with id "submit_create_copy"
 
 
@@ -62,37 +62,37 @@ Feature: Create library items
     Given we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"
     And we click the element with id "create_copy"
-    And we enter the value "Crossbows and Catapults" into the bgg autocomplete with id "copy_game"
+    And we enter the value "Crossbows and Catapults" into the bgg autocomplete with id "copy_title"
     And we click the element with id "submit_create_copy"
     Then we will see an element with id "message_success"
 
 
-  Scenario: The create library item dialog will create a new game when the selected game does not already exist
+  Scenario: The create library item dialog will create a new title when the selected title does not already exist
     Given we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"
     And we click the element with id "create_copy"
-    And we enter the value "Crossbows and Catapults" into the bgg autocomplete with id "copy_game"
+    And we enter the value "Crossbows and Catapults" into the bgg autocomplete with id "copy_title"
     And we click the element with id "submit_create_copy"
     Then we will see an element with id "message_success"
-    And there will be a game with the name "Crossbows and Catapults"
+    And there will be a title with the name "Crossbows and Catapults"
 
 
-  Scenario: The create library item dialog will not create a new game when the selected game already exists
-    Given we have created a game with title "Crossbows and Catapults" and bggid 2129
+  Scenario: The create library item dialog will not create a new title when the selected title already exists
+    Given we have created a title with name "Crossbows and Catapults" and bggid 2129
     And we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"
     And we click the element with id "create_copy"
-    And we enter the value "Crossbows and Catapults" into the bgg autocomplete with id "copy_game"
+    And we enter the value "Crossbows and Catapults" into the bgg autocomplete with id "copy_title"
     And we click the element with id "submit_create_copy"
     Then we will see an element with id "message_success"
-    And there will be a game with the name "Crossbows and Catapults"
+    And there will be a title with the name "Crossbows and Catapults"
 
 
   Scenario: The create library item dialog will create a new copy
     Given we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"
     And we click the element with id "create_copy"
-    And we enter the value "Crossbows and Catapults" into the bgg autocomplete with id "copy_game"
+    And we enter the value "Crossbows and Catapults" into the bgg autocomplete with id "copy_title"
     And we click the element with id "submit_create_copy"
     Then we will see an element with id "message_success"
-    And there will be a copy of the game named "Crossbows and Catapults" belonging to "admin@example.com"
+    And there will be a copy of the title named "Crossbows and Catapults" belonging to "admin@example.com"

@@ -6,33 +6,33 @@ import org.grails.gorm.graphql.fetcher.impl.SingleEntityDataFetcher
 import grails.gorm.DetachedCriteria
 import graphql.schema.DataFetchingEnvironment
 
-class Game {
+class Title {
     static graphql = GraphQLMapping.lazy {
-        query('gameByBggId', Game) {
+        query('titleByBggId', Title) {
             argument("bggId", Integer)
-            dataFetcher(new SingleEntityDataFetcher(Game.gormPersistentEntity) {
+            dataFetcher(new SingleEntityDataFetcher(Title.gormPersistentEntity) {
                 @Override
                 protected DetachedCriteria buildCriteria(DataFetchingEnvironment environment) {
-                    Game.where { bggId == environment.getArgument('bggId') }
+                    Title.where { bggId == environment.getArgument('bggId') }
                 }
             })
         }
-        query('gameByTitle', Game) {
-            argument("title", String)
-            dataFetcher(new SingleEntityDataFetcher(Game.gormPersistentEntity) {
+        query('titleByName', Title) {
+            argument("name", String)
+            dataFetcher(new SingleEntityDataFetcher(Title.gormPersistentEntity) {
                 @Override
                 protected DetachedCriteria buildCriteria(DataFetchingEnvironment environment) {
-                    Game.where { title == environment.getArgument('title') }
+                    Title.where { name == environment.getArgument('name') }
                 }
             })
         }
     }
 
-    String title
+    String name
     Long bggId
 
     static constraints = {
-        title nullable:false
+        name nullable:false
         bggId nullable:true, unique:true
     }
 }

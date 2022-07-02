@@ -84,10 +84,10 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
                 isOnlyChangingPassword(document)
     }
 
-    static boolean isUserCreatingGame(User currentUser, Document document) {
+    static boolean isUserCreatingTitle(User currentUser, Document document) {
         return  currentUser != null &&
                 document.children.size() == 1 &&
-                isOperationWithName(document.children[0], Operation.MUTATION, "gameCreate")
+                isOperationWithName(document.children[0], Operation.MUTATION, "titleCreate")
     }
 
     boolean permitOperation(User currentUser, Document document) {
@@ -95,7 +95,7 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
                 isAdminUser(currentUser) ||
                 isCurrentUserRetrievingTheirOwnId(currentUser, document) ||
                 isCurrentUserChangingTheirOwnPassword(currentUser, document) ||
-                isUserCreatingGame(currentUser, document)
+                isUserCreatingTitle(currentUser, document)
     }
 
     @Override

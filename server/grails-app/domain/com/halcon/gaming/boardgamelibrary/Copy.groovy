@@ -9,7 +9,7 @@ class Copy {
 
     String uuid = UUID.randomUUID().toString()
     User owner
-    Game game
+    Title title
 
     static constraints = {
         uuid nullable:false, validator: {
@@ -22,6 +22,6 @@ class Copy {
         }
 
         owner nullable:false
-        game nullable:false
+        title nullable:false
     }
 }

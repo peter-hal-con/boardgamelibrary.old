@@ -9,8 +9,8 @@
       </select>
     </div>
     <div class="form-group">
-      <label for="copy_game">Game Title</label>
-      <BggAutocomplete id="copy_game" v-model="selectedTitle"/>
+      <label for="copy_title">Title</label>
+      <BggAutocomplete id="copy_title" v-model="selectedTitle"/>
     </div>
     <button id="submit_create_copy" type="submit" class="btn btn-dark btn-lg btn-block">Create Library Item</button>
   </form>
@@ -60,30 +60,30 @@ export default {
     }
   },
   methods: {
-    create_game: function(title) {
-      return fetchGraphQL('mutation{gameCreate(game:{title:"' + title.name + '", bggId:' + title.bgg_id + '}) {id, title, bggId}}')
+    create_title: function(title) {
+      return fetchGraphQL('mutation{titleCreate(title:{name:"' + title.name + '", bggId:' + title.bgg_id + '}) {id, name, bggId}}')
     },
 
-    ensure_game_exists: function(title) {
-      return fetchGraphQL('query{gameByBggId(bggId:' + title.bgg_id + ') {id, title, bggId}}')
+    ensure_title_exists: function(title) {
+      return fetchGraphQL('query{titleByBggId(bggId:' + title.bgg_id + ') {id, name, bggId}}')
       .then(response => {
-        if(response.data.gameByBggId === null) {
-          return this.create_game(title).then(response => { return response.data.gameCreate })
+        if(response.data.titleByBggId === null) {
+          return this.create_title(title).then(response => { return response.data.titleCreate })
         } else {
-          return response.data.gameByBggId
+          return response.data.titleByBggId
         }
       })
     },
 
     create_copy: function() {
-      this.ensure_game_exists(this.selectedTitle)
+      this.ensure_title_exists(this.selectedTitle)
       .then(response => {
-        const gameId = response.id
+        const titleId = response.id
         const ownerId = this.copyOwnerId
-        fetchGraphQL('mutation{copyCreate(copy:{game:{id:' + gameId + '}, owner:{id:' + ownerId + '}}) {id, game {title}, owner {username}}}')
+        fetchGraphQL('mutation{copyCreate(copy:{title:{id:' + titleId + '}, owner:{id:' + ownerId + '}}) {id, title {name}, owner {username}}}')
         .then(response => {
           this.message.type = "success"
-          this.message.text = "Successfully created a copy of: '" + response.data.copyCreate.game.title + "' belonging to '" + response.data.copyCreate.owner.username + "'"
+          this.message.text = "Successfully created a copy of: '" + response.data.copyCreate.title.name + "' belonging to '" + response.data.copyCreate.owner.username + "'"
         })
       })
     }
