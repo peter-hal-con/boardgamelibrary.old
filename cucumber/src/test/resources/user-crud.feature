@@ -16,7 +16,7 @@ Feature: Creation, retrieval, update, and deletion of users
   @create
   Scenario: We can create a user with an authority
     When we create a user with username "test@example.com" and password "password3" and authority "<authority>"
-    And we retrieve the user with username "test@example.com"
+    And we retrieve the user with username "test@example.com" by their id
     Then the result of "$.data.user.authorities[0].authority" will be "<authority>"
 
     Examples:
@@ -61,7 +61,7 @@ Feature: Creation, retrieval, update, and deletion of users
       | username         | password  |
       | test@example.com | password3 |
     When we update the user with username "test@example.com" so that their "username" is "updated@example.com"
-    And we retrieve the user with username "test@example.com"
+    And we retrieve the user with username "test@example.com" by their id
     Then the result of "$.data.user.username" will be "updated@example.com"
 
 
@@ -80,7 +80,7 @@ Feature: Creation, retrieval, update, and deletion of users
       | username         | password  |
       | test@example.com | password3 |
     When we grant the "<authority>" authority to the user with username "test@example.com"
-    And we retrieve the user with username "test@example.com"
+    And we retrieve the user with username "test@example.com" by their id
     Then the result of "$.data.user.authorities[0].authority" will be "<authority>"
 
     Examples:
@@ -95,7 +95,7 @@ Feature: Creation, retrieval, update, and deletion of users
       | username         | password  | authorities |
       | test@example.com | password3 | <authority> |
     When we revoke the "<authority>" authority from the user with username "test@example.com"
-    And we retrieve the user with username "test@example.com"
+    And we retrieve the user with username "test@example.com" by their id
     Then the result of "$.data.user.authorities" will be "[]"
 
     Examples:
@@ -110,7 +110,7 @@ Feature: Creation, retrieval, update, and deletion of users
       | username         | password  |
       | test@example.com | password3 |
     When we delete the user with username "test@example.com"
-    And we retrieve the user with username "test@example.com"
+    And we retrieve the user with username "test@example.com" by their id
     Then the result of "$.data.user" will be 'null'
 
 
@@ -120,7 +120,7 @@ Feature: Creation, retrieval, update, and deletion of users
       | username         | password  | authorities |
       | test@example.com | password3 | <authority> |
     When we delete the user with username "test@example.com"
-    And we retrieve the user with username "test@example.com"
+    And we retrieve the user with username "test@example.com" by their id
     Then the result of "$.data.user" will be 'null'
 
     Examples:
