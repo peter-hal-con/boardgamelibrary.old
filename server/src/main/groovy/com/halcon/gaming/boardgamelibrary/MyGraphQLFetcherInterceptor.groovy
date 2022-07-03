@@ -27,6 +27,10 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
         return user != null && user.authorities.contains(Authority.findByAuthority("ROLE_ADMIN"))
     }
 
+    static boolean isCommitteeUser(User user) {
+        return user != null && user.authorities.contains(Authority.findByAuthority("ROLE_COMMITTEE"))
+    }
+
     static boolean isOperationWithName(def node, Operation operation, String name) {
         return  node.operation == operation &&
                 node.children.size() == 1 &&
@@ -52,11 +56,11 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
     }
 
     static boolean isTargetingCurrentUserByUsername(Document document, User currentUser) {
-        return findArgumentByName(document.children[0].children[0].selections[0].arguments, 'username').value.value == currentUser.username
+        return currentUser != null && findArgumentByName(document.children[0].children[0].selections[0].arguments, 'username').value.value == currentUser.username
     }
 
     static boolean isTargetingCurrentUserById(Document document, User currentUser) {
-        return findArgumentByName(document.children[0].children[0].selections[0].arguments, 'id').value.value == currentUser.id
+        return currentUser != null && findArgumentByName(document.children[0].children[0].selections[0].arguments, 'id').value.value == currentUser.id
     }
 
     static boolean isOnlyRetrievingId(Document document) {
@@ -84,8 +88,8 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
                 isOnlyChangingPassword(document)
     }
 
-    static boolean isUserCreatingTitle(User currentUser, Document document) {
-        return  currentUser != null &&
+    static boolean isAdminOrCommitteeUserCreatingTitle(User currentUser, Document document) {
+        return  (isAdminUser(currentUser) || isCommitteeUser(currentUser)) &&
                 document.children.size() == 1 &&
                 isOperationWithName(document.children[0], Operation.MUTATION, "titleCreate")
     }
@@ -95,7 +99,7 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
                 isAdminUser(currentUser) ||
                 isCurrentUserRetrievingTheirOwnId(currentUser, document) ||
                 isCurrentUserChangingTheirOwnPassword(currentUser, document) ||
-                isUserCreatingTitle(currentUser, document)
+                isAdminOrCommitteeUserCreatingTitle(currentUser, document)
     }
 
     @Override
