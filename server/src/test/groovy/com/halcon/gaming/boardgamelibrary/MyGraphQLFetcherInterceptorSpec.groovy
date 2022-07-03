@@ -101,7 +101,7 @@ class MyGraphQLFetcherInterceptorSpec extends Specification implements DataTest 
         "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${testUser.id}}}) {id}}"      | adminUser     | true
 
         "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${adminUser.id}}}) {id}}"     | committeeUser | false
-        //"mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${committeeUser.id}}}) {id}}" | committeeUser | true
+        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${committeeUser.id}}}) {id}}" | committeeUser | true
         "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${testUser.id}}}) {id}}"      | committeeUser | false
 
         "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${adminUser.id}}}) {id}}"     | testUser      | false
@@ -113,7 +113,7 @@ class MyGraphQLFetcherInterceptorSpec extends Specification implements DataTest 
         "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${testUser.id}}}) {id}}"      | adminUser     | true
 
         "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${adminUser.id}}}) {id}}"     | committeeUser | false
-        //"mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${committeeUser.id}}}) {id}}" | committeeUser | true
+        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${committeeUser.id}}}) {id}}" | committeeUser | true
         "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${testUser.id}}}) {id}}"      | committeeUser | false
 
         "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${adminUser.id}}}) {id}}"     | testUser      | false
@@ -125,7 +125,7 @@ class MyGraphQLFetcherInterceptorSpec extends Specification implements DataTest 
         "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${testUser.id}}}) {id}}"      | adminUser     | true
 
         "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${adminUser.id}}}) {id}}"     | committeeUser | false
-        //"mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${committeeUser.id}}}) {id}}" | committeeUser | true
+        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${committeeUser.id}}}) {id}}" | committeeUser | true
         "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${testUser.id}}}) {id}}"      | committeeUser | false
 
         "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${adminUser.id}}}) {id}}"     | testUser      | false

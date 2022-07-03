@@ -5,13 +5,7 @@ import org.grails.gorm.graphql.interceptor.GraphQLFetcherInterceptor
 
 import grails.util.Environment
 import grails.util.Holders
-import graphql.language.Argument
 import graphql.language.Document
-import graphql.language.IntValue
-import graphql.language.ObjectValue
-import graphql.language.SelectionSet
-import graphql.language.StringValue
-import graphql.language.OperationDefinition.Operation
 import graphql.schema.DataFetchingEnvironment
 
 class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
@@ -31,75 +25,44 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
         return user != null && user.authorities.contains(Authority.findByAuthority("ROLE_COMMITTEE"))
     }
 
-    static boolean isOperationWithName(def node, Operation operation, String name) {
-        return  node.operation == operation &&
-                node.children.size() == 1 &&
-                node.children[0].selections.size() == 1 &&
-                node.children[0].selections[0].name == name
+    static boolean isCurrentUserRetrievingTheirOwnId(User currentUser, GraphQLFieldWrapper wrapper) {
+        return  wrapper.fieldName == "userByUsername" &&
+                wrapper.argumentMap["username"].value == currentUser.username &&
+                wrapper.selectionSet.size() == 1 && wrapper.selectionSet.contains("id")
     }
 
-    static boolean isUserByUsername(Document document) {
-        return  document.children.size() == 1 &&
-                isOperationWithName(document.children[0], Operation.QUERY, "userByUsername")
+    static boolean isCurrentUserChangingTheirOwnPassword(User currentUser, GraphQLFieldWrapper wrapper) {
+        return  wrapper.fieldName == "userUpdate" &&
+                wrapper.argumentMap.size() == 2 &&
+                wrapper.argumentMap["id"].value.longValue() == currentUser.id &&
+                wrapper.argumentMap.containsKey("user.password") &&
+                wrapper.selectionSet.size() == 1 && wrapper.selectionSet.contains("id")
     }
 
-    static boolean isUserUpdate(Document document) {
-        return  document.children.size() == 1 &&
-                isOperationWithName(document.children[0], Operation.MUTATION, "userUpdate")
+    static boolean isCommitteeUserCreatingTitle(User currentUser, GraphQLFieldWrapper wrapper) {
+        return  isCommitteeUser(currentUser) &&
+                wrapper.fieldName == "titleCreate"
     }
 
-    static Argument findArgumentByName(List<Argument> arguments, String name) {
-        for (argument in arguments) {
-            if(argument.name == name) return argument
-        }
-        return null
-    }
-
-    static boolean isTargetingCurrentUserByUsername(Document document, User currentUser) {
-        return currentUser != null && findArgumentByName(document.children[0].children[0].selections[0].arguments, 'username').value.value == currentUser.username
-    }
-
-    static boolean isTargetingCurrentUserById(Document document, User currentUser) {
-        return currentUser != null && findArgumentByName(document.children[0].children[0].selections[0].arguments, 'id').value.value == currentUser.id
-    }
-
-    static boolean isOnlyRetrievingId(Document document) {
-        SelectionSet selectionSet = document.children[0].children[0].selections[0].selectionSet
-        return  selectionSet.selections.size() == 1 &&
-                selectionSet.selections[0].name == 'id'
-    }
-
-    static boolean isOnlyChangingPassword(Document document) {
-        Argument userArgument = findArgumentByName(document.children[0].children[0].selections[0].arguments, 'user')
-        return  userArgument.value instanceof ObjectValue &&
-                userArgument.value.objectFields.size() == 1 &&
-                userArgument.value.objectFields[0].name == 'password'
-    }
-
-    static boolean isCurrentUserRetrievingTheirOwnId(User currentUser, Document document) {
-        return  isUserByUsername(document) &&
-                isTargetingCurrentUserByUsername(document, currentUser) &&
-                isOnlyRetrievingId(document)
-    }
-
-    static boolean isCurrentUserChangingTheirOwnPassword(User currentUser, Document document) {
-        return  isUserUpdate(document) &&
-                isTargetingCurrentUserById(document, currentUser) &&
-                isOnlyChangingPassword(document)
-    }
-
-    static boolean isAdminOrCommitteeUserCreatingTitle(User currentUser, Document document) {
-        return  (isAdminUser(currentUser) || isCommitteeUser(currentUser)) &&
-                document.children.size() == 1 &&
-                isOperationWithName(document.children[0], Operation.MUTATION, "titleCreate")
+    static boolean isCommitteeUserCreatingTheirOwnCopy(User currentUser, GraphQLFieldWrapper wrapper) {
+        return  isCommitteeUser(currentUser) &&
+                wrapper.fieldName == "copyCreate" &&
+                wrapper.argumentMap["copy.owner.id"].value.longValue() == currentUser.id
     }
 
     boolean permitOperation(User currentUser, Document document) {
-        return  isRunningInDevelopmentEnvironment() ||
-                isAdminUser(currentUser) ||
-                isCurrentUserRetrievingTheirOwnId(currentUser, document) ||
-                isCurrentUserChangingTheirOwnPassword(currentUser, document) ||
-                isAdminOrCommitteeUserCreatingTitle(currentUser, document)
+        if(isRunningInDevelopmentEnvironment() || isAdminUser(currentUser)) return true
+
+        boolean permit = true
+
+        for(GraphQLFieldWrapper wrapper : GraphQLFieldWrapper.wrap(document)) {
+            permit = permit && currentUser != null && (isCurrentUserRetrievingTheirOwnId(currentUser, wrapper) ||
+                    isCurrentUserChangingTheirOwnPassword(currentUser, wrapper) ||
+                    isCommitteeUserCreatingTitle(currentUser, wrapper)) ||
+                    isCommitteeUserCreatingTheirOwnCopy(currentUser, wrapper)
+        }
+
+        return permit
     }
 
     @Override
