@@ -1,6 +1,9 @@
 package com.halcon.gaming.boardgamelibrary.cucumber
 
+import static org.awaitility.Awaitility.*
 import static org.junit.jupiter.api.Assertions.*
+
+import java.util.concurrent.TimeUnit
 
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -55,6 +58,7 @@ public class StepDefinitions {
         assertFalse(restClient.hasAccessToken())
     }
 
+    @Given("we have performed a GraphQL query {string}")
     @When("we perform a GraphQL query {string}")
     public void we_perform_a_graph_ql_query(String query) {
         restClient.graphQL(query)
@@ -73,5 +77,24 @@ public class StepDefinitions {
     @Then("the result of {string} will have a value")
     public void the_result_of_will_have_a_value(String jsonPath) {
         assertNotNull(restClient.extractJsonPathFromResponse(jsonPath).toString())
+    }
+
+    @Then("there will be a title with the name {string}")
+    public void there_will_be_a_title_with_the_name(String name) {
+        await().atMost(5, TimeUnit.SECONDS).until {
+            restClient.authenticate("admin@example.com", userRepository.userPassword("admin@example.com"))
+            restClient.graphQL("query{titleByName(name:\"${name}\"){name}}")
+            return name == restClient.extractJsonPathFromResponse('$.data.titleByName.name')
+        }
+    }
+
+    @Then("there will be a copy of the title named {string} belonging to {string}")
+    public void there_will_be_a_copy_of_the_title_named_belonging_to(String name, String username) {
+        await().atMost(5, TimeUnit.SECONDS).until {
+            restClient.authenticate("admin@example.com", userRepository.userPassword("admin@example.com"))
+            restClient.graphQL("query{copyList{title{name} owner{username}}}")
+            return name == restClient.extractJsonPathFromResponse('$.data.copyList[0].title.name') &&
+                    username == restClient.extractJsonPathFromResponse('$.data.copyList[0].owner.username')
+        }
     }
 }

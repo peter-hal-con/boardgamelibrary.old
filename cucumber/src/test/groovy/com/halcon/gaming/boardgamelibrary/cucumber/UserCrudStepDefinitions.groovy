@@ -39,8 +39,8 @@ class UserCrudStepDefinitions {
         grantAuthorityToUser(userRepository.userId(username), authorityIdMap[authority])
     }
 
-    @When("we retrieve the user with username {string}")
-    public void we_retrieve_the_user_with_username(String username) {
+    @When("we retrieve the user with username {string} by their id")
+    public void we_retrieve_the_user_with_username_by_their_id(String username) {
         restClient.graphQL("query{user(id:${userRepository.userId(username)}){username authorities{authority}}}")
     }
 

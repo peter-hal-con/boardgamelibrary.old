@@ -7,7 +7,7 @@ import spock.lang.Specification
 class TestOnlyControllerSpec extends Specification implements ControllerUnitTest<TestOnlyController>, DataTest {
 
     Class<?>[] getDomainClassesToMock(){
-        return [User, Authority, UserAuthority] as Class[]
+        return [User, Authority, UserAuthority, Title, Copy] as Class[]
     }
 
     def setup() {
@@ -53,7 +53,7 @@ class TestOnlyControllerSpec extends Specification implements ControllerUnitTest
             createdUser.authorities.contains(adminAuthority)
     }
 
-    void "test reset"() {
+    void "test reset on user"() {
         given:
             User user = [username:"test@example.com", password:"password3"] as User
             user.save(flush:true)
@@ -81,5 +81,37 @@ class TestOnlyControllerSpec extends Specification implements ControllerUnitTest
             status == 200
             User.findAll().empty
             UserAuthority.findAll().empty
+    }
+
+    void "test reset on title"() {
+        given:
+            Title title = [title:"Crossbows and Catapults", bggId:2129] as Title
+            title.save(flush:true)
+
+        when:
+            controller.reset()
+
+        then:
+            status == 200
+            Title.findAll().empty
+    }
+
+    void "test reset on copy"() {
+        given:
+            Title title = [title:"Crossbows and Catapults", bggId:2129] as Title
+            title.save(flush:true)
+
+            User user = [username:"test@example.com", password:"password3"] as User
+            user.save(flush:true)
+
+            Copy copy = [title:title, owner:user] as Copy
+            copy.save(flush:true)
+
+        when:
+            controller.reset()
+
+        then:
+            status == 200
+            Copy.findAll().empty
     }
 }

@@ -36,6 +36,11 @@ export default new Router({
       path: '/change-password',
       name: 'change-password',
       component: () => import('../components/ChangePassword.vue')
+    },
+    {
+      path: '/createCopy',
+      name: 'createCopy',
+      component: () => import('../components/CreateCopy.vue')
     }
   ]
 })
