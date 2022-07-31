@@ -116,7 +116,6 @@ Feature: Create library items
     Then the element with id "copy_title" will be empty
 
 
-  @this-one
   Scenario: The create library item dialog will create a new copy of a game whose title includes an ampersand
     Given we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"
