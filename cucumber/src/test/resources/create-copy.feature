@@ -105,3 +105,12 @@ Feature: Create library items
     And we click the element with id "submit_create_copy"
     Then we will see an element with id "message_success"
     And there will be a copy of the title named "Crossbows and Catapults" belonging to "admin@example.com"
+
+
+  Scenario: The create library item dialog will clear the copy_title field after creating a copy
+    Given we are logged in as "admin@example.com"
+    When we click the element with id "user_dropdown"
+    And we click the element with id "create_copy"
+    And we enter the value "Crossbows and Catapults" into the bgg autocomplete with id "copy_title"
+    And we click the element with id "submit_create_copy"
+    Then the element with id "copy_title" will be empty

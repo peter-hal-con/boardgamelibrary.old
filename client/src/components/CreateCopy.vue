@@ -84,6 +84,7 @@ export default {
         .then(response => {
           this.message.type = "success"
           this.message.text = "Successfully created a copy of: '" + response.data.copyCreate.title.name + "' belonging to '" + response.data.copyCreate.owner.username + "'"
+          this.selectedTitle = null
         })
       })
     }

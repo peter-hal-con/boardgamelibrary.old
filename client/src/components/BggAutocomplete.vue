@@ -1,12 +1,12 @@
 <!-- Vue component -->
 <template>
   <multiselect
-    v-model="content"
+    :value='value'
     :options="titles"
     @search-change="asyncFind"
     label="label"
     track-by="bgg_id"
-    @input="handleInput">
+    @input="onInput">
   </multiselect>
 </template>
 
@@ -42,10 +42,9 @@
   export default {
     // OR register locally
     components: { Multiselect },
-    prop: ['value'],
+    props: ['value'],
     data () {
       return {
-        content: this.value,
         titles: [],
         isLoading: false
       }
@@ -67,8 +66,8 @@
           this.isLoading = false;
         });
       },
-      handleInput() {
-        this.$emit('input', this.content)
+      onInput(ev) {
+        this.$emit('input', ev)
       }
     }
   }
