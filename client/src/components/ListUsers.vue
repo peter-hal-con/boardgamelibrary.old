@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(user) in users" :key="user.id" :id="'tr-'+user.username">
+      <tr v-for="(user) in userList" :key="user.id" :id="'tr-'+user.username">
         <td id="username">{{user.username}}</td>
         <td v-for="(authority) in authorities" :key="authority" :id="authority">{{(require('jsonpath').query(user.authorities, '$..authority').includes(authority)) ? "&#10004;" : " "}}</td>
         <td id="update">
@@ -19,19 +19,18 @@
   </table>
 </template>
 <script>
-import {fetchGraphQL} from '../graphql'
+import gql from 'graphql-tag'
 
 export default {
   name: "ListUsers",
+  apollo: {
+    userList: gql`query { userList { id, username, authorities { authority } } }`
+  },
   data() {
     return {
-      users: [],
+      userList: [],
       authorities: ['ROLE_ADMIN', 'ROLE_COMMITTEE']
     }
-  },
-  mounted() {
-    fetchGraphQL('query { userList { id, username, authorities { authority } } }')
-    .then(response => this.users = response.data.userList)
   }
 }
 </script>
