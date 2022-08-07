@@ -116,7 +116,7 @@ Feature: Create library items
     Then the element with id "copy_title" will be empty
 
 
-  Scenario: The create library item dialog will create a new copy of a game whose title includes an ampersand
+  Scenario Outline: The create library item dialog will create a new copy of a game whose title includes an ampersand
     Given we are logged in as "admin@example.com"
     When we click the element with id "user_dropdown"
     And we click the element with id "create_copy"
@@ -125,8 +125,8 @@ Feature: Create library items
     Then we will see an element with id "message_success"
     And there will be a copy of the title named "<title>" belonging to "admin@example.com"
 
-  Examples:
-    | title              |
-    | Tigris & Euphrates |
-    | Light & Dark       |
-    | Hare & Tortoise    |
+    Examples:
+      | title              |
+      | Tigris & Euphrates |
+      | Light & Dark       |
+      | Hare & Tortoise    |
