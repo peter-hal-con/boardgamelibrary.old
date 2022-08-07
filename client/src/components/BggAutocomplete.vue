@@ -1,12 +1,12 @@
 <!-- Vue component -->
 <template>
   <multiselect
-    v-model="content"
+    :value='value'
     :options="titles"
     @search-change="asyncFind"
     label="label"
     track-by="bgg_id"
-    @input="handleInput">
+    @input="onInput">
   </multiselect>
 </template>
 
@@ -18,7 +18,8 @@
   Vue.component('multiselect', Multiselect)
 
   function queryBGG(searchQuery) {
-    return fetch('https://boardgamegeek.com/xmlapi2/search?type=boardgame,boardgameaccessory,boardgameexpansion&query="' + encodeURIComponent(searchQuery) + '"')
+    const tmp = searchQuery.replace(/\s/g, '+').replace(/&/g, 'and')
+    return fetch('https://boardgamegeek.com/xmlapi2/search?type=boardgame,boardgameaccessory,boardgameexpansion&query=' + encodeURIComponent(tmp) + '')
     .then(response => response.text())
     .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
     .then(data => Array.prototype.slice.call(data.documentElement.getElementsByTagName("item")).map(itemElement => {
@@ -42,10 +43,9 @@
   export default {
     // OR register locally
     components: { Multiselect },
-    prop: ['value'],
+    props: ['value'],
     data () {
       return {
-        content: this.value,
         titles: [],
         isLoading: false
       }
@@ -67,8 +67,8 @@
           this.isLoading = false;
         });
       },
-      handleInput() {
-        this.$emit('input', this.content)
+      onInput(ev) {
+        this.$emit('input', ev)
       }
     }
   }
