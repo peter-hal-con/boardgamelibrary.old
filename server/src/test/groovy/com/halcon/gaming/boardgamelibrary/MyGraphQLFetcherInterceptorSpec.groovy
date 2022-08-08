@@ -75,6 +75,23 @@ class MyGraphQLFetcherInterceptorSpec extends Specification implements DataTest 
         "query{userByUsername(username:\"${committeeUser.username}\"){id}}"                | null          | false
         "query{userByUsername(username:\"${testUser.username}\"){id}}"                     | null          | false
 
+        "query{copyList{id, owner{username}, title{name}}}"                                | adminUser     | true
+        "query{copyList{id, owner{username}, title{name}}}"                                | committeeUser | false
+        "query{copyList{id, owner{username}, title{name}}}"                                | testUser      | false
+        "query{copyList{id, owner{username}, title{name}}}"                                | null          | false
+        
+        "query{copyList(ownerId:${adminUser.id}){id, owner{username}, title{name}}}"       | adminUser     | true
+        "query{copyList(ownerId:${committeeUser.id}){id, owner{username}, title{name}}}"   | adminUser     | true
+        "query{copyList(ownerId:${testUser.id}){id, owner{username}, title{name}}}"        | adminUser     | true
+        
+        "query{copyList(ownerId:${adminUser.id}){id, owner{username}, title{name}}}"       | committeeUser | false
+        "query{copyList(ownerId:${committeeUser.id}){id, owner{username}, title{name}}}"   | committeeUser | true
+        "query{copyList(ownerId:${testUser.id}){id, owner{username}, title{name}}}"        | committeeUser | false
+        
+        "query{copyList(ownerId:${adminUser.id}){id, owner{username}, title{name}}}"       | testUser      | false
+        "query{copyList(ownerId:${committeeUser.id}){id, owner{username}, title{name}}}"   | testUser      | false
+        "query{copyList(ownerId:${testUser.id}){id, owner{username}, title{name}}}"        | testUser      | false
+
         "mutation{userUpdate(id:${adminUser.id}, user:{password:\"test\"}) {id}}"          | adminUser     | true
         "mutation{userUpdate(id:${committeeUser.id}, user:{password:\"test\"}) {id}}"      | adminUser     | true
         "mutation{userUpdate(id:${testUser.id}, user:{password:\"test\"}) {id}}"           | adminUser     | true

@@ -50,6 +50,12 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
                 wrapper.argumentMap["copy.owner.id"].value.longValue() == currentUser.id
     }
 
+    static boolean isCommitteeUserRetrievingTheirOwnCopies(User currentUser, GraphQLFieldWrapper wrapper) {
+        return  isCommitteeUser(currentUser) &&
+                wrapper.fieldName == "copyList" &&
+                wrapper.argumentMap["ownerId"]?.value == currentUser.id
+    }
+
     boolean permitOperation(User currentUser, Document document) {
         if(isRunningInDevelopmentEnvironment() || isAdminUser(currentUser)) return true
 
@@ -58,8 +64,9 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
         for(GraphQLFieldWrapper wrapper : GraphQLFieldWrapper.wrap(document)) {
             permit = permit && currentUser != null && (isCurrentUserRetrievingTheirOwnId(currentUser, wrapper) ||
                     isCurrentUserChangingTheirOwnPassword(currentUser, wrapper) ||
-                    isCommitteeUserCreatingTitle(currentUser, wrapper)) ||
-                    isCommitteeUserCreatingTheirOwnCopy(currentUser, wrapper)
+                    isCommitteeUserCreatingTitle(currentUser, wrapper) ||
+                    isCommitteeUserCreatingTheirOwnCopy(currentUser, wrapper) ||
+                    isCommitteeUserRetrievingTheirOwnCopies(currentUser, wrapper))
         }
 
         return permit
