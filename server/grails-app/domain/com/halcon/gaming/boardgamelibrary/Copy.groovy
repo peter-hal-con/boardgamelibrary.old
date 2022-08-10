@@ -1,24 +1,24 @@
 package com.halcon.gaming.boardgamelibrary
 
 import org.grails.gorm.graphql.entity.dsl.GraphQLMapping
+import org.grails.gorm.graphql.fetcher.impl.PaginatedEntityDataFetcher
 
-import graphql.schema.DataFetcher
+import grails.gorm.DetachedCriteria
 import graphql.schema.DataFetchingEnvironment
 
 class Copy {
-    static graphql = GraphQLMapping.build {
+    static graphql = GraphQLMapping.lazy {
         property('uuid', nullable: true)
-        query("copyList", [Copy]) {
+        query("pagedCopyList", pagedResult(Copy)) {
             argument('owner', String) { nullable true }
-            dataFetcher(new DataFetcher() {
+            dataFetcher(new PaginatedEntityDataFetcher(Copy.gormPersistentEntity) {
                 @Override
-                public Object get(DataFetchingEnvironment environment) {
+                protected DetachedCriteria buildCriteria(DataFetchingEnvironment environment) {
                     String ownerUsername = environment.getArgument('owner')
                     if(ownerUsername == null) {
-                        return Copy.list()
+                        return super.buildCriteria(environment);
                     } else {
-                        User owner = User.findByUsername(ownerUsername)
-                        return Copy.findAllByOwner(owner)
+                        return Copy.where{owner == User.findByUsername(ownerUsername)}
                     }
                 }
             })

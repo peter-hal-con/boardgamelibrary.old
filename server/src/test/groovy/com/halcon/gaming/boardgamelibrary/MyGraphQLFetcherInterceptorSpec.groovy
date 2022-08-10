@@ -53,100 +53,100 @@ class MyGraphQLFetcherInterceptorSpec extends Specification implements DataTest 
         new MyGraphQLFetcherInterceptor().permitOperation(user, Parser.parse(document)) == permitted
 
         where:
-        document                                                                                   | user          | permitted
-        "query{userList{username}}"                                                                | adminUser     | true
-        "query{userList{username}}"                                                                | committeeUser | false
-        "query{userList{username}}"                                                                | testUser      | false
-        "query{userList{username}}"                                                                | null          | false
+        document                                                                                                 | user          | permitted
+        "query{userList{username}}"                                                                              | adminUser     | true
+        "query{userList{username}}"                                                                              | committeeUser | false
+        "query{userList{username}}"                                                                              | testUser      | false
+        "query{userList{username}}"                                                                              | null          | false
 
-        "query{userByUsername(username:\"${adminUser.username}\"){id}}"                            | adminUser     | true
-        "query{userByUsername(username:\"${committeeUser.username}\"){id}}"                        | adminUser     | true
-        "query{userByUsername(username:\"${testUser.username}\"){id}}"                             | adminUser     | true
+        "query{userByUsername(username:\"${adminUser.username}\"){id}}"                                          | adminUser     | true
+        "query{userByUsername(username:\"${committeeUser.username}\"){id}}"                                      | adminUser     | true
+        "query{userByUsername(username:\"${testUser.username}\"){id}}"                                           | adminUser     | true
 
-        "query{userByUsername(username:\"${adminUser.username}\"){id}}"                            | committeeUser | false
-        "query{userByUsername(username:\"${committeeUser.username}\"){id}}"                        | committeeUser | true
-        "query{userByUsername(username:\"${testUser.username}\"){id}}"                             | committeeUser | false
+        "query{userByUsername(username:\"${adminUser.username}\"){id}}"                                          | committeeUser | false
+        "query{userByUsername(username:\"${committeeUser.username}\"){id}}"                                      | committeeUser | true
+        "query{userByUsername(username:\"${testUser.username}\"){id}}"                                           | committeeUser | false
 
-        "query{userByUsername(username:\"${adminUser.username}\"){id}}"                            | testUser      | false
-        "query{userByUsername(username:\"${committeeUser.username}\"){id}}"                        | testUser      | false
-        "query{userByUsername(username:\"${testUser.username}\"){id}}"                             | testUser      | true
+        "query{userByUsername(username:\"${adminUser.username}\"){id}}"                                          | testUser      | false
+        "query{userByUsername(username:\"${committeeUser.username}\"){id}}"                                      | testUser      | false
+        "query{userByUsername(username:\"${testUser.username}\"){id}}"                                           | testUser      | true
 
-        "query{userByUsername(username:\"${adminUser.username}\"){id}}"                            | null          | false
-        "query{userByUsername(username:\"${committeeUser.username}\"){id}}"                        | null          | false
-        "query{userByUsername(username:\"${testUser.username}\"){id}}"                             | null          | false
+        "query{userByUsername(username:\"${adminUser.username}\"){id}}"                                          | null          | false
+        "query{userByUsername(username:\"${committeeUser.username}\"){id}}"                                      | null          | false
+        "query{userByUsername(username:\"${testUser.username}\"){id}}"                                           | null          | false
 
-        "query{copyList{id, owner{username}, title{name}}}"                                        | adminUser     | true
-        "query{copyList{id, owner{username}, title{name}}}"                                        | committeeUser | false
-        "query{copyList{id, owner{username}, title{name}}}"                                        | testUser      | false
-        "query{copyList{id, owner{username}, title{name}}}"                                        | null          | false
+        "query{pagedCopyList{results{id, owner{username}, title{name}}}}"                                        | adminUser     | true
+        "query{pagedCopyList{results{id, owner{username}, title{name}}}}"                                        | committeeUser | false
+        "query{pagedCopyList{results{id, owner{username}, title{name}}}}"                                        | testUser      | false
+        "query{pagedCopyList{results{id, owner{username}, title{name}}}}"                                        | null          | false
         
-        "query{copyList(owner:\"${adminUser.username}\"){id, owner{username}, title{name}}}"       | adminUser     | true
-        "query{copyList(owner:\"${committeeUser.username}\"){id, owner{username}, title{name}}}"   | adminUser     | true
-        "query{copyList(owner:\"${testUser.username}\"){id, owner{username}, title{name}}}"        | adminUser     | true
+        "query{pagedCopyList(owner:\"${adminUser.username}\"){results{id, owner{username}, title{name}}}}"       | adminUser     | true
+        "query{pagedCopyList(owner:\"${committeeUser.username}\"){results{id, owner{username}, title{name}}}}"   | adminUser     | true
+        "query{pagedCopyList(owner:\"${testUser.username}\"){results{id, owner{username}, title{name}}}}"        | adminUser     | true
         
-        "query{copyList(owner:\"${adminUser.username}\"){id, owner{username}, title{name}}}"       | committeeUser | false
-        "query{copyList(owner:\"${committeeUser.username}\"){id, owner{username}, title{name}}}"   | committeeUser | true
-        "query{copyList(owner:\"${testUser.username}\"){id, owner{username}, title{name}}}"        | committeeUser | false
+        "query{pagedCopyList(owner:\"${adminUser.username}\"){results{id, owner{username}, title{name}}}}"       | committeeUser | false
+        "query{pagedCopyList(owner:\"${committeeUser.username}\"){results{id, owner{username}, title{name}}}}"   | committeeUser | true
+        "query{pagedCopyList(owner:\"${testUser.username}\"){results{id, owner{username}, title{name}}}}"        | committeeUser | false
         
-        "query{copyList(owner:\"${adminUser.username}\"){id, owner{username}, title{name}}}"       | testUser      | false
-        "query{copyList(owner:\"${committeeUser.username}\"){id, owner{username}, title{name}}}"   | testUser      | false
-        "query{copyList(owner:\"${testUser.username}\"){id, owner{username}, title{name}}}"        | testUser      | false
+        "query{pagedCopyList(owner:\"${adminUser.username}\"){results{id, owner{username}, title{name}}}}"       | testUser      | false
+        "query{pagedCopyList(owner:\"${committeeUser.username}\"){results{id, owner{username}, title{name}}}}"   | testUser      | false
+        "query{pagedCopyList(owner:\"${testUser.username}\"){results{id, owner{username}, title{name}}}}"        | testUser      | false
 
-        "mutation{userUpdate(id:${adminUser.id}, user:{password:\"test\"}) {id}}"                  | adminUser     | true
-        "mutation{userUpdate(id:${committeeUser.id}, user:{password:\"test\"}) {id}}"              | adminUser     | true
-        "mutation{userUpdate(id:${testUser.id}, user:{password:\"test\"}) {id}}"                   | adminUser     | true
+        "mutation{userUpdate(id:${adminUser.id}, user:{password:\"test\"}) {id}}"                                | adminUser     | true
+        "mutation{userUpdate(id:${committeeUser.id}, user:{password:\"test\"}) {id}}"                            | adminUser     | true
+        "mutation{userUpdate(id:${testUser.id}, user:{password:\"test\"}) {id}}"                                 | adminUser     | true
 
-        "mutation{userUpdate(id:${adminUser.id}, user:{password:\"test\"}) {id}}"                  | committeeUser | false
-        "mutation{userUpdate(id:${committeeUser.id}, user:{password:\"test\"}) {id}}"              | committeeUser | true
-        "mutation{userUpdate(id:${testUser.id}, user:{password:\"test\"}) {id}}"                   | committeeUser | false
+        "mutation{userUpdate(id:${adminUser.id}, user:{password:\"test\"}) {id}}"                                | committeeUser | false
+        "mutation{userUpdate(id:${committeeUser.id}, user:{password:\"test\"}) {id}}"                            | committeeUser | true
+        "mutation{userUpdate(id:${testUser.id}, user:{password:\"test\"}) {id}}"                                 | committeeUser | false
 
-        "mutation{userUpdate(id:${adminUser.id}, user:{password:\"test\"}) {id}}"                  | testUser      | false
-        "mutation{userUpdate(id:${committeeUser.id}, user:{password:\"test\"}) {id}}"              | testUser      | false
-        "mutation{userUpdate(id:${testUser.id}, user:{password:\"test\"}) {id}}"                   | testUser      | true
+        "mutation{userUpdate(id:${adminUser.id}, user:{password:\"test\"}) {id}}"                                | testUser      | false
+        "mutation{userUpdate(id:${committeeUser.id}, user:{password:\"test\"}) {id}}"                            | testUser      | false
+        "mutation{userUpdate(id:${testUser.id}, user:{password:\"test\"}) {id}}"                                 | testUser      | true
 
-        "mutation{userUpdate(id:${adminUser.id}, user:{password:\"test\"}) {id}}"                  | null          | false
-        "mutation{userUpdate(id:${committeeUser.id}, user:{password:\"test\"}) {id}}"              | null          | false
-        "mutation{userUpdate(id:${testUser.id}, user:{password:\"test\"}) {id}}"                   | null          | false
+        "mutation{userUpdate(id:${adminUser.id}, user:{password:\"test\"}) {id}}"                                | null          | false
+        "mutation{userUpdate(id:${committeeUser.id}, user:{password:\"test\"}) {id}}"                            | null          | false
+        "mutation{userUpdate(id:${testUser.id}, user:{password:\"test\"}) {id}}"                                 | null          | false
 
-        "mutation{titleCreate(title:{name:\"Some Title\"}) {id}}"                                  | adminUser     | true
-        "mutation{titleCreate(title:{name:\"Some Title\"}) {id}}"                                  | committeeUser | true
-        "mutation{titleCreate(title:{name:\"Some Title\"}) {id}}"                                  | testUser      | false
-        "mutation{titleCreate(title:{name:\"Some Title\"}) {id}}"                                  | null          | false
+        "mutation{titleCreate(title:{name:\"Some Title\"}) {id}}"                                                | adminUser     | true
+        "mutation{titleCreate(title:{name:\"Some Title\"}) {id}}"                                                | committeeUser | true
+        "mutation{titleCreate(title:{name:\"Some Title\"}) {id}}"                                                | testUser      | false
+        "mutation{titleCreate(title:{name:\"Some Title\"}) {id}}"                                                | null          | false
 
-        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${adminUser.id}}}) {id}}"             | adminUser     | true
-        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${committeeUser.id}}}) {id}}"         | adminUser     | true
-        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${testUser.id}}}) {id}}"              | adminUser     | true
+        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${adminUser.id}}}) {id}}"                           | adminUser     | true
+        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${committeeUser.id}}}) {id}}"                       | adminUser     | true
+        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${testUser.id}}}) {id}}"                            | adminUser     | true
 
-        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${adminUser.id}}}) {id}}"             | committeeUser | false
-        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${committeeUser.id}}}) {id}}"         | committeeUser | true
-        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${testUser.id}}}) {id}}"              | committeeUser | false
+        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${adminUser.id}}}) {id}}"                           | committeeUser | false
+        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${committeeUser.id}}}) {id}}"                       | committeeUser | true
+        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${testUser.id}}}) {id}}"                            | committeeUser | false
 
-        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${adminUser.id}}}) {id}}"             | testUser      | false
-        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${committeeUser.id}}}) {id}}"         | testUser      | false
-        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${testUser.id}}}) {id}}"              | testUser      | false
+        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${adminUser.id}}}) {id}}"                           | testUser      | false
+        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${committeeUser.id}}}) {id}}"                       | testUser      | false
+        "mutation{copyCreate(copy:{title:{id: 1}, owner:{id: ${testUser.id}}}) {id}}"                            | testUser      | false
 
-        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${adminUser.id}}}) {id}}"             | adminUser     | true
-        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${committeeUser.id}}}) {id}}"         | adminUser     | true
-        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${testUser.id}}}) {id}}"              | adminUser     | true
+        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${adminUser.id}}}) {id}}"                           | adminUser     | true
+        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${committeeUser.id}}}) {id}}"                       | adminUser     | true
+        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${testUser.id}}}) {id}}"                            | adminUser     | true
 
-        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${adminUser.id}}}) {id}}"             | committeeUser | false
-        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${committeeUser.id}}}) {id}}"         | committeeUser | true
-        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${testUser.id}}}) {id}}"              | committeeUser | false
+        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${adminUser.id}}}) {id}}"                           | committeeUser | false
+        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${committeeUser.id}}}) {id}}"                       | committeeUser | true
+        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${testUser.id}}}) {id}}"                            | committeeUser | false
 
-        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${adminUser.id}}}) {id}}"             | testUser      | false
-        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${committeeUser.id}}}) {id}}"         | testUser      | false
-        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${testUser.id}}}) {id}}"              | testUser      | false
+        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${adminUser.id}}}) {id}}"                           | testUser      | false
+        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${committeeUser.id}}}) {id}}"                       | testUser      | false
+        "mutation{copyCreate(copy:{title:{id: 2}, owner:{id: ${testUser.id}}}) {id}}"                            | testUser      | false
 
-        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${adminUser.id}}}) {id}}"             | adminUser     | true
-        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${committeeUser.id}}}) {id}}"         | adminUser     | true
-        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${testUser.id}}}) {id}}"              | adminUser     | true
+        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${adminUser.id}}}) {id}}"                           | adminUser     | true
+        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${committeeUser.id}}}) {id}}"                       | adminUser     | true
+        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${testUser.id}}}) {id}}"                            | adminUser     | true
 
-        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${adminUser.id}}}) {id}}"             | committeeUser | false
-        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${committeeUser.id}}}) {id}}"         | committeeUser | true
-        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${testUser.id}}}) {id}}"              | committeeUser | false
+        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${adminUser.id}}}) {id}}"                           | committeeUser | false
+        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${committeeUser.id}}}) {id}}"                       | committeeUser | true
+        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${testUser.id}}}) {id}}"                            | committeeUser | false
 
-        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${adminUser.id}}}) {id}}"             | testUser      | false
-        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${committeeUser.id}}}) {id}}"         | testUser      | false
-        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${testUser.id}}}) {id}}"              | testUser      | false
+        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${adminUser.id}}}) {id}}"                           | testUser      | false
+        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${committeeUser.id}}}) {id}}"                       | testUser      | false
+        "mutation{copyCreate(copy:{title:{id: 3}, owner:{id: ${testUser.id}}}) {id}}"                            | testUser      | false
     }
 }

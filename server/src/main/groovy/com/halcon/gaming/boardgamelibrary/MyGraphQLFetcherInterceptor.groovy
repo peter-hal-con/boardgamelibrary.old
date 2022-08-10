@@ -52,7 +52,7 @@ class MyGraphQLFetcherInterceptor implements GraphQLFetcherInterceptor {
 
     static boolean isCommitteeUserRetrievingTheirOwnCopies(User currentUser, GraphQLFieldWrapper wrapper) {
         return  isCommitteeUser(currentUser) &&
-                wrapper.fieldName == "copyList" &&
+                wrapper.fieldName == "pagedCopyList" &&
                 wrapper.argumentMap["owner"]?.value == currentUser.username
     }
 

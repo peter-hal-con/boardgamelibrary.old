@@ -7,7 +7,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(copy) in copyList" :key="copy.id" :id="'tr-'+copy.id">
+      <tr v-for="(copy) in pagedCopyList.results" :key="copy.id" :id="'tr-'+copy.id">
         <td id="owner">{{copy.owner.username}}</td>
         <td id="title">{{copy.title.name}}</td>
       </tr>
@@ -20,17 +20,17 @@ import gql from 'graphql-tag'
 export default {
   name: "CopyList",
   apollo: {
-    copyList: {
+    pagedCopyList: {
       query () {
         var currentUser = JSON.parse(localStorage.auth)
-        return  gql`query{copyList(owner:"${currentUser.username}"){id, owner{username}, title{name}}}`
+        return  gql`query{pagedCopyList(owner:"${currentUser.username}"){results{id, owner{username}, title{name}}}}`
       },
       pollInterval: 2000
     }
   },
   data() {
     return {
-      copyList: [],
+      pagedCopyList: [],
       authorities: ['ROLE_ADMIN', 'ROLE_COMMITTEE']
     }
   }
